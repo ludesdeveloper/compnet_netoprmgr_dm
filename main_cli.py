@@ -4,6 +4,8 @@ import re
 import pkg_resources
 import shutil
 import subprocess
+import threading
+import xlrd
 from zipfile import ZipFile
 
 from netoprmgr_dm.script.capture import function_capture
@@ -46,7 +48,28 @@ class MainCli:
                 os.remove(file)
         data_dir = (data_path+'/devices_data.xlsx')
         command_dir = (data_path+'/show_command.xlsx')
-        call_function_capture=function_capture(data_dir,command_dir,capture_path)
+        #start multi thread
+        book = xlrd.open_workbook(data_dir)
+        first_sheet = book.sheet_by_index(0)
+        cell = first_sheet.cell(0,0)
+
+        book_command = xlrd.open_workbook(command_dir)
+        first_sheet_command = book_command.sheet_by_index(0)
+        cell_command = first_sheet_command.cell(0,0)
+
+        jobs = []
+
+        for i in range(first_sheet.nrows):
+            #call_function_capture=function_capture(first_sheet,first_sheet_command,capture_path)
+            my_thread = threading.Thread(target=function_capture, args=(first_sheet,first_sheet_command,capture_path,i))
+            jobs.append(my_thread)
+
+        for job in jobs:
+            job.start()
+
+        for job in jobs:
+            job.join()
+
         chg_dir = os.chdir(capture_path)
         current_dir=os.getcwd()
         files = os.listdir(current_dir)
