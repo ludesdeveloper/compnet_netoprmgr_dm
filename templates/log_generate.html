@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1 data-aos="fade-up">Click to <span class="typed-words"></span></h1>
+
+
+
+    <form action="{{ url_for('log_generate') }}" method='POST'>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="Jan" name='log_checkbox'>
+            <label class="form-check-label" for="inlineCheckbox1">Jan</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="Feb" name='log_checkbox'>
+            <label class="form-check-label" for="inlineCheckbox2">Feb</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="Mar" name='log_checkbox'>
+            <label class="form-check-label" for="inlineCheckbox3">Mar</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="Apr" name='log_checkbox'>
+            <label class="form-check-label" for="inlineCheckbox1">Apr</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="May" name='log_checkbox'>
+            <label class="form-check-label" for="inlineCheckbox2">May</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="Jun" name='log_checkbox'>
+            <label class="form-check-label" for="inlineCheckbox3">Jun</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="Jul" name='log_checkbox'>
+            <label class="form-check-label" for="inlineCheckbox1">Jul</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="Aug" name='log_checkbox'>
+            <label class="form-check-label" for="inlineCheckbox2">Aug</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="Sep" name='log_checkbox'>
+            <label class="form-check-label" for="inlineCheckbox3">Sep</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="Oct" name='log_checkbox'>
+            <label class="form-check-label" for="inlineCheckbox1">Oct</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="Nov" name='log_checkbox'>
+            <label class="form-check-label" for="inlineCheckbox2">Nov</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="Dec" name='log_checkbox'>
+            <label class="form-check-label" for="inlineCheckbox3">Dec</label>
+        </div>
+        <div>
+            <select id="ddlYears" name="log_year"></select>
+        </div>
+        <button type="submit" class="btn btn-primary" value="Submit">Generate</button>
+    </form>
+
+    <script src="{{ url_for('static', filename='bootstrap/js/typed.js') }}"></script>
+    <script>
+            var typed = new Typed('.typed-words', {
+            strings: ["Generate Log Analysis"],
+            typeSpeed: 80,
+            backSpeed: 80,
+            backDelay: 4000,
+            startDelay: 1000,
+            loop: true,
+            showCursor: true
+            });
+    </script>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            //Reference the DropDownList.
+            var ddlYears = document.getElementById("ddlYears");
+     
+            //Determine the Current Year.
+            var currentYear = (new Date()).getFullYear();
+     
+            //Loop and add the Year values to DropDownList.
+            for (var i = 1990; i <= currentYear; i++) {
+                var option = document.createElement("OPTION");                
+                option.innerHTML = i;
+                option.value = i;
+                
+                if (currentYear == i) {
+                    option.selected = 'true';
+                }
+                ddlYears.appendChild(option);
+            }
+        };
+    </script>
+{% endblock %}

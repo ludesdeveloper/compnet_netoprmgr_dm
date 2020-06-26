@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 data-aos="fade-up">Select Logs to <span class="typed-words"></span></h1>
+<h2 class="custom-h2">Capture or Log should FOLLOWING</h2>
+<h2 class="custom-h2"><a href="{{ url_for('command_guide') }}">command reference guide</a></h2>
+<script src="{{ url_for('static', filename='bootstrap/js/typed.js') }}"></script>
+<script>
+	var typed = new Typed('.typed-words', {
+	strings: ["Upload"],
+	typeSpeed: 80,
+	backSpeed: 80,
+	backDelay: 4000,
+	startDelay: 1000,
+	loop: true,
+	showCursor: true
+	});
+</script>
+<p>
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+		<ul class=flashes>
+		{% for message in messages %}
+		  <li>{{ message }}</li>
+		{% endfor %}
+		</ul>
+	  {% endif %}
+	{% endwith %}
+</p>
+<div class="form-group">
+<form method="post" action="{{ url_for('log_upload') }}" enctype="multipart/form-data">
+    <dl>
+		<p>
+			<input type="file" name="files[]" multiple="true" autocomplete="off" required class="btn-primary">
+		</p>
+    </dl>
+    <p>
+		<!--input type="submit" value="Submit"-->
+		<button type="submit" class="btn btn-primary" value="Submit">Submit</button>
+	</p>
+</form>
+</div>
+{% endblock %}

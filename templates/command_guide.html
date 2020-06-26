@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 data-aos="fade-up">Automation <span class="typed-words"></span></h1>
+<p data-aos="fade-up" class=" w-75 mx-auto">Show Command sequence should follow order below :</p>
+<p data-aos="fade-up" class=" w-75 mx-auto">cisco_ios : 1. show inventory, 2. show run, 3. show run, 4. show process cpu, 5. show process cpu, 6. show env, 7. show env, 8. show environment, 9. show environment all, 10. show log</p>
+<p data-aos="fade-up" class=" w-75 mx-auto">cisco_xe : 1. show inventory, 2. show run, 3. show run, 4. show process cpu, 5. show process cpu, 6. show env, 7. show env, 8. show environment, 9. show environment all, 10. show log</p>
+<p data-aos="fade-up" class=" w-75 mx-auto">cisco_asa : 1. show inventory, 2. show run, 3. show run, 4. show process cpu, 5. show process cpu, 6. show env, 7. show env, 8. show environment, 9. show environment all, 10. show log</p>
+<p data-aos="fade-up" class=" w-75 mx-auto">cisco_nxos : 1. show inventory, 2. show run, 3. show run, 4. show process cpu, 5. show process cpu, 6. show env, 7. show env, 8. show environment, 9. show environment all, 10. show log</p>
+<script src="{{ url_for('static', filename='bootstrap/js/typed.js') }}"></script>
+    <script>
+            var typed = new Typed('.typed-words', {
+            strings: ["Device Identification"," Device Availability Check"," Capture", " Create Report"],
+            typeSpeed: 80,
+            backSpeed: 80,
+            backDelay: 4000,
+            startDelay: 1000,
+            loop: true,
+            showCursor: true
+            });
+    </script>
+{% endblock %}

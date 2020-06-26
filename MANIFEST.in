@@ -1,0 +1,5 @@
+include netoprmgr_dm/static/bootstrap/css/*.css
+include netoprmgr_dm/static/bootstrap/js/*.js
+include netoprmgr_dm/static/home/*.css
+include netoprmgr_dm/static/pic/*.png
+include netoprmgr_dm/templates/*.html

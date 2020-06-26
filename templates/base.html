@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Netoptmgr &mdash; Website Trio Musketeers</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	  <link rel="shortcut icon" href="{{ url_for('static', filename='pic/favicon.ico') }}">
+	
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/fonts/icomoon/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/magnific-popup.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/owl.theme.default.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap-datepicker.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/fonts/flaticon/font/flaticon.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/aos.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/rangeslider.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/style.css') }}">
+
+  </head>
+  <body>
+  <div class="site-wrap">
+    <div class="site-mobile-menu">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close mt-3">
+          <span class="icon-close2 js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div>
+    
+    <header class="site-navbar" role="banner">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-11 col-xl-2">
+            <h1 class="mb-0 site-logo"><a href="{{ url_for('home') }}" class="text-white h2 mb-0"><img src="{{ url_for('static', filename='pic/netoprmgr_dm2.png') }}" width="170,41" height="50,22"></a></h1>
+          </div>
+          <div class="col-12 col-md-10 d-none d-xl-block">
+            <nav class="site-navigation position-relative text-right" role="navigation">
+              <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
+                <li class="active"><a href="{{ url_for('home') }}"><span>Home</span></a></li>
+                
+                <li class="has-children">
+                  <a href="#"><span>Initialize</span></a>
+                  <ul class="dropdown arrow-top">
+                    <li><a href="{{ url_for('template_generate_page') }}">Generate Template</a></li>
+                    <li><a href="{{ url_for('raw_data_upload_page') }}">Upload Raw Data</a></li>
+                    <li><a href="{{ url_for('raw_download') }}">Download Raw Data</a></li>
+                    <li><a href="{{ url_for('generate_device_data_page') }}">Generate Device Data(SSH)</a></li>
+                  </ul>
+                </li>
+
+                <li class="has-children">
+                  <a href="#"><span>Capture</span></a>
+                  <ul class="dropdown arrow-top">
+                    <li><a href="{{ url_for('device_data_upload_page') }}">Upload Data</a></li>
+                    <li><a href="{{ url_for('data_download') }}">Download Data</a></li>
+                    <li><a href="{{ url_for('capture_log_page') }}">Capture Device(SSH)</a></li>
+					<li><a href="{{ url_for('capture_log_download') }}">Download Logs</a></li>
+					<li><a href="{{ url_for('log_delete_page') }}">Delete Logs</a></li>
+                  </ul>
+                </li>
+                <li><a href="#developer"><span>Developer</span></a></li>
+              </ul>
+            </nav>
+          </div>
+          <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div>
+        </div>
+       </div>
+	</header>
+  </div>  
+    
+	<section class="home" id="home">
+    <div class="site-blocks-cover overlay" style="background-image: url({{ url_for('static', filename='pic/22912-c.jpg') }});" data-aos="fade" data-stellar-background-ratio="0.5">
+      <div class="container">
+        <div class="row align-items-center justify-content-center text-center">
+          <div class="col-md-10">
+            <div class="row justify-content-center mb-4">
+              <div class="col-md-10 text-center">
+                {% block content %}
+                
+                {% endblock %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+	</section>  
+
+	<section class="developer" id="developer">
+    <div class="site-section bg-light">
+      <div class="container">
+        <div class="row justify-content-center mb-5">
+          <div class="col-md-7 text-center border-primary">
+            <h2 class="font-weight-light text-primary">Developer</h2>
+          </div>
+        </div>
+        <div class="slide-one-item home-slider owl-carousel">
+          <div>
+            <div class="testimonial">
+              <figure class="mb-4">
+                <img src="{{ url_for('static', filename='pic/Seski.jpg') }}" class="img-fluid mb-3">
+                <p>Seski Ramadhan</p>
+              </figure>
+              <blockquote>
+                <p>&ldquo;Leader Team Netoptmgr&rdquo;</p>
+              </blockquote>
+            </div>
+          </div>
+		  
+          <div>
+            <div class="testimonial">
+              <figure class="mb-4">
+                <img src="{{ url_for('static', filename='pic/Dedar.jpg') }}"  class="img-fluid mb-3">
+                <p>Dedy Darisman</p>
+              </figure>
+              <blockquote>
+                <p>&ldquo;Member Team Netoptmgr&rdquo;</p>
+              </blockquote>
+            </div>
+          </div>
+
+          <div>
+            <div class="testimonial">
+              <figure class="mb-4">
+                <img src="{{ url_for('static', filename='pic/Luthfi.jpg') }}"  class="img-fluid mb-3">
+                <p>Luthfi Anandra</p>
+              </figure>
+              <blockquote>
+                <p>&ldquo;Member Team Netoptmgr&rdquo;</p>
+              </blockquote>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </section>
+	
+    <footer class="site-footer">
+            <p style="text-align:center">
+            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved 
+            </p>
+			<p style="text-align:center">
+			Seski Ramadhan | Dedy Darisman | Luthfi Anandra
+			</p>
+    </footer>
+ 
+
+  <script src="{{ url_for('static', filename='bootstrap/js/jquery-3.3.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/jquery-migrate-3.0.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/jquery-ui.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/popper.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/owl.carousel.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/jquery.stellar.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/jquery.countdown.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/jquery.magnific-popup.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/bootstrap-datepicker.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/aos.js') }}"></script>
+  <script src="{{ url_for('static', filename='bootstrap/js/rangeslider.min.js') }}"></script>
+  
+
+  <script src="{{ url_for('static', filename='bootstrap/js/main.js') }}"></script>
+  
+  </body>
+</html>

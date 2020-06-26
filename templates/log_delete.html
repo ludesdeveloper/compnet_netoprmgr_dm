@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1 data-aos="fade-up">WARNING!!! <span class="typed-words"></span></h1>
+    <form action="{{ url_for('log_delete') }}">
+        <!--input type="submit" value="Submit"-->
+        <button type="submit" class="btn btn-danger" value="Submit">Delete Logs</button>
+    </form>
+
+    <script src="{{ url_for('static', filename='bootstrap/js/typed.js') }}"></script>
+    <script>
+            var typed = new Typed('.typed-words', {
+            strings: ["Click to Delete Logs"],
+            typeSpeed: 80,
+            backSpeed: 80,
+            backDelay: 4000,
+            startDelay: 1000,
+            loop: true,
+            showCursor: true
+            });
+    </script>
+{% endblock %}

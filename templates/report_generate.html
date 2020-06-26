@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1 data-aos="fade-up">Click to <span class="typed-words"></span></h1>
+
+    <!--input type="submit" value="Submit"-->
+    <div class="ludes-margin-bottom">
+        <button class="btn btn-primary" onclick="triggerSSE()">Generate</button>
+    </div>
+    <div class="card-body scroll" id="kotak">
+        <p class="card-text" id="result"></p>
+    </div>
+    <div class="ludes-margin-bottom">
+        <form method="get" action="{{ url_for('static', filename='result/preventive_maintenance.docx') }}">
+            <button class="btn btn-success hidebutton" id="downloadbutton">Download</button>
+        </form>
+    </div>
+    <script src="{{ url_for('static', filename='bootstrap/js/typed.js') }}"></script>
+    <script>
+            var typed = new Typed('.typed-words', {
+            strings: ["Generate Report"],
+            typeSpeed: 80,
+            backSpeed: 80,
+            backDelay: 4000,
+            startDelay: 1000,
+            loop: true,
+            showCursor: true
+            });
+    </script>
+
+    <script>
+        function triggerSSE() {
+        if(typeof(EventSource) !== "undefined") {
+        var hidebtn = document.getElementById("downloadbutton");
+        var source = new EventSource("/report/generate");
+        var str_find = "Finished";
+        hidebtn.style.display = "none";
+        source.onmessage = function(event) {
+            //var txt = even.data;
+            document.getElementById("result").innerHTML += event.data + "<br>";
+            updateScroll();
+            //alert(even.data);
+            //var obj = JSON.parse(txt);
+            //document.getElementById("result").innerHTML += obj.total_print + "<br>";
+            //console.log(obj.total_print);
+            event_check = event.data.includes("Finished");
+            if(event_check==true){
+            source.close()
+            hidebtn.style.display = "block";
+            //alert('ketemu')
+            };
+        };
+        } else {
+            document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
+        }
+        }
+
+        function updateScroll(){
+            var element = document.getElementById("kotak");
+            element.scrollTop = element.scrollHeight;
+	    }
+    </script>
+
+{% endblock %}

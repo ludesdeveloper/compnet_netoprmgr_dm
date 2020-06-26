@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 data-aos="fade-up">Click Here to <span class="typed-words"></span></h1>
+<form method="get" action="{{ url_for('static', filename='capture/captures.zip') }}">
+    <button class="btn btn-primary" type="submit">Download</button>
+</form>
+<script src="{{ url_for('static', filename='bootstrap/js/typed.js') }}"></script>
+    <script>
+            var typed = new Typed('.typed-words', {
+            strings: ["Download .zip File"],
+            typeSpeed: 80,
+            backSpeed: 80,
+            backDelay: 4000,
+            startDelay: 1000,
+            loop: true,
+            showCursor: true
+            });
+    </script>
+{% endblock %}
