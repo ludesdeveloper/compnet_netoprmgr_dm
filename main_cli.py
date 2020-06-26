@@ -5,6 +5,7 @@ import pkg_resources
 import shutil
 import subprocess
 import threading
+from concurrent.futures import ThreadPoolExecutor
 import xlrd
 from zipfile import ZipFile
 
@@ -56,7 +57,7 @@ class MainCli:
         book_command = xlrd.open_workbook(command_dir)
         first_sheet_command = book_command.sheet_by_index(0)
         cell_command = first_sheet_command.cell(0,0)
-
+        '''
         jobs = []
 
         for i in range(first_sheet.nrows):
@@ -69,7 +70,14 @@ class MainCli:
 
         for job in jobs:
             job.join()
-
+        '''
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            jobs = []
+            for i in range(first_sheet.nrows):
+                a = executor.submit(function_capture, first_sheet, first_sheet_command, capture_path, i)
+                jobs.append(a)
+                print(a)
+        
         chg_dir = os.chdir(capture_path)
         current_dir=os.getcwd()
         files = os.listdir(current_dir)
