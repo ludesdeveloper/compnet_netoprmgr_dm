@@ -14,6 +14,14 @@ You can also create virtual environment to use this module.
 	pip install -r requirements.txt
 	```
 
+3.	We added support for Riverbed, please do following command after install requirements
+	```
+	steel install
+	```
+	steel install --steelhead
+	```
+
+
 # Usage
 
 1.	Run python -m netoprmgr_dm__main__
