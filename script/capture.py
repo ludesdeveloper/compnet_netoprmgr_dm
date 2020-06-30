@@ -40,9 +40,9 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
                             print(output)
                             write.write(first_sheet_command.row_values(command)[count_column]+'\n')
                             write.write(output+'\n')
-                            count_column+=1
                         except:
                             pass
+                        count_column+=1
         
         except:
             write.write('Cannot Remote Device')
@@ -67,10 +67,9 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
                             print(output)
                             write.write(first_sheet_command.row_values(command)[count_column]+'\n')
                             write.write(output+'\n')
-                            count_column+=1
                         except:
                             pass
-
+                        count_column+=1
             #disconnect netmiko
             net_connect.disconnect()
         
