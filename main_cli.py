@@ -83,223 +83,11 @@ class MainCli:
         files = os.listdir(current_dir)
         zipObj = ZipFile('captures.zip', 'w')
         for file in files:
-            zipObj.write(file)
+            if '__init__.py' in file:
+                pass
+            else:
+                zipObj.write(file)
         zipObj.close()
-
-    def showLog():
-        chg_dir = os.chdir(capture_path)
-        current_dir=os.getcwd()
-        from netoprmgr_dm.script.get_log import get_log
-        #from netoprmgr_dm.script.log_docx import log_docx
-
-        num=input('Log for 1 or 3 month?\n')
-        month_list = []
-        if num == '1':
-            month=input('Please input month\n'+'1 = Jan\n'+
-                                                    '2 = Feb\n'+
-                                                    '3 = Mar\n'+
-                                                    '4 = Apr\n'+
-                                                    '5 = May\n'+
-                                                    '6 = Jun\n'+
-                                                    '7 = Jul\n'+
-                                                    '8 = Aug\n'+
-                                                    '9 = Sep\n'+
-                                                    '10 = Oct\n'+
-                                                    '11 = Nov\n'+
-                                                    '12 = Dec\n')
-            if month == '1':
-                month = 'Jan'
-            elif month == '2':
-                month = 'Feb'
-            elif month == '3':
-                month = 'Mar'
-            elif month == '4':
-                month = 'Apr'
-            elif month == '5':
-                month = 'May'
-            elif month == '6':
-                month = 'Jun'
-            elif month == '7':
-                month = 'Jul'
-            elif month == '8':
-                month = 'Aug'
-            elif month == '9':
-                month = 'Sep'
-            elif month == '10':
-                month = 'Oct'
-            elif month == '11':
-                month = 'Nov'
-            elif month == '12':
-                month = 'Dec'
-            month_list.append(month)
-        elif num == '3':
-            month=input('Please input first month\n'+'1 = Jan\n'+
-                                                    '2 = Feb\n'+
-                                                    '3 = Mar\n'+
-                                                    '4 = Apr\n'+
-                                                    '5 = May\n'+
-                                                    '6 = Jun\n'+
-                                                    '7 = Jul\n'+
-                                                    '8 = Aug\n'+
-                                                    '9 = Sep\n'+
-                                                    '10 = Oct\n'+
-                                                    '11 = Nov\n'+
-                                                    '12 = Dec\n')
-            if month == '1':
-                month = 'Jan'
-            elif month == '2':
-                month = 'Feb'
-            elif month == '3':
-                month = 'Mar'
-            elif month == '4':
-                month = 'Apr'
-            elif month == '5':
-                month = 'May'
-            elif month == '6':
-                month = 'Jun'
-            elif month == '7':
-                month = 'Jul'
-            elif month == '8':
-                month = 'Aug'
-            elif month == '9':
-                month = 'Sep'
-            elif month == '10':
-                month = 'Oct'
-            elif month == '11':
-                month = 'Nov'
-            elif month == '12':
-                month = 'Dec'
-            month_list.append(month)
-
-            month=input('\nPlease input second month\n'+'1 = Jan\n'+
-                                                    '2 = Feb\n'+
-                                                    '3 = Mar\n'+
-                                                    '4 = Apr\n'+
-                                                    '5 = May\n'+
-                                                    '6 = Jun\n'+
-                                                    '7 = Jul\n'+
-                                                    '8 = Aug\n'+
-                                                    '9 = Sep\n'+
-                                                    '10 = Oct\n'+
-                                                    '11 = Nov\n'+
-                                                    '12 = Dec\n')
-            if month == '1':
-                month = 'Jan'
-            elif month == '2':
-                month = 'Feb'
-            elif month == '3':
-                month = 'Mar'
-            elif month == '4':
-                month = 'Apr'
-            elif month == '5':
-                month = 'May'
-            elif month == '6':
-                month = 'Jun'
-            elif month == '7':
-                month = 'Jul'
-            elif month == '8':
-                month = 'Aug'
-            elif month == '9':
-                month = 'Sep'
-            elif month == '10':
-                month = 'Oct'
-            elif month == '11':
-                month = 'Nov'
-            elif month == '12':
-                month = 'Dec'
-            month_list.append(month)
-
-            month=input('\nPlease input third month\n'+'1 = Jan\n'+
-                                                    '2 = Feb\n'+
-                                                    '3 = Mar\n'+
-                                                    '4 = Apr\n'+
-                                                    '5 = May\n'+
-                                                    '6 = Jun\n'+
-                                                    '7 = Jul\n'+
-                                                    '8 = Aug\n'+
-                                                    '9 = Sep\n'+
-                                                    '10 = Oct\n'+
-                                                    '11 = Nov\n'+
-                                                    '12 = Dec\n')
-            if month == '1':
-                month = 'Jan'
-            elif month == '2':
-                month = 'Feb'
-            elif month == '3':
-                month = 'Mar'
-            elif month == '4':
-                month = 'Apr'
-            elif month == '5':
-                month = 'May'
-            elif month == '6':
-                month = 'Jun'
-            elif month == '7':
-                month = 'Jul'
-            elif month == '8':
-                month = 'Aug'
-            elif month == '9':
-                month = 'Sep'
-            elif month == '10':
-                month = 'Oct'
-            elif month == '11':
-                month = 'Nov'
-            elif month == '12':
-                month = 'Dec'
-            month_list.append(month)
-        else:
-            print('Wrong Input!!! Back To Main')
-            menu()
-
-        files = os.listdir(current_dir)
-        get_log=get_log(files,month_list)
-        get_log.get_log()
-        
-        time.sleep(3)
-        for file in files:
-            if file.endswith("db"):
-                os.remove(file)
-        src_mv = (capture_path+'show_log.docx')
-        dst_mv = (result_path+'show_log.docx')
-        shutil.move(src_mv,dst_mv)
-
-    def showLogWeb(month_list,year):
-        chg_dir = os.chdir(capture_path)
-        current_dir=os.getcwd()
-        from netoprmgr_dm.script.get_log import get_log
-
-        month_list = month_list
-        year = year
-
-        files = os.listdir(current_dir)
-        get_log=get_log(files,month_list,year)
-        get_log.get_log()
-        
-        time.sleep(3)
-        for file in files:
-            if file.endswith("db"):
-                os.remove(file)
-        #src_mv = (capture_path+'show_log.docx')
-        #dst_mv = (result_path+'show_log.docx')
-        #shutil.move(src_mv,dst_mv)
-        src_mv = (capture_path+'logresult')
-        dst_mv = (result_path+'logresult')
-        shutil.move(src_mv,dst_mv)
-
-    def createNewReport():
-        chg_dir = os.chdir(capture_path)
-        current_dir=os.getcwd()
-        from netoprmgr_dm.script.file_identification import file_identification
-        from netoprmgr_dm.script.convert_docx import convert_docx
-        files = os.listdir(current_dir)
-        file_identification=file_identification(files)
-        file_identification.file_identification()
-        convert_docx=convert_docx()
-        convert_docx.convert_docx()
-        time.sleep(3)
-        src_mv = (capture_path+'preventive_maintenance.docx')
-        dst_mv = (result_path+'preventive_maintenance.docx')
-        shutil.move(src_mv,dst_mv)
-        os.remove("pmdb")
 
     def createTemplate():
         chg_dir = os.chdir(data_path)
@@ -319,42 +107,20 @@ class MainCli:
                 except:
                     pass
 
-    def webAccess():
-        chg_dir = os.chdir(base_path)
-        print(os.getcwd())
-        command = ['python3 main_web.py','python main_web.py']
-        count_row = 0
-
-        for i in command:
-            try:
-                subprocess.call(i, shell=True)
-            except:
-                pass
-            count_row+=1
-        
 if __name__ == "__main__":
     answer=input(
     'Type "template" to create template on data folder\n\n'
     'Press Number for MENU :\n'
-    'Type "web" for accessing web version\n'
-    '0. Device Identification (Still Development)\n'
-    '1. Device Availability Check\n'
-    '2. Capture\n'
-    '3. Create Report\n'
-    '4. Show Log Report\n'
+    '1. Device Identification (Still Development)\n'
+    '2. Device Availability Check\n'
+    '3. Capture\n'
     'Type "quit" to quit program\n'
     )
-    if answer == '0':
+    if answer == '1':
         MainCli.deviceIdentification()
-    elif answer == '1':
-        MainCli.deviceAvailability()
     elif answer == '2':
-        MainCli.captureDevice()
+        MainCli.deviceAvailability()
     elif answer == '3':
-        MainCli.createNewReport()
-    elif answer == '4':
-        MainCli.showLog()
-    elif answer == 'web':
-        MainCli.webAccess()
+        MainCli.captureDevice()
     elif answer == 'template':
         MainCli.createTemplate()
