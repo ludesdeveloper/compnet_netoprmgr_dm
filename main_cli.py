@@ -9,7 +9,6 @@ from concurrent.futures import ThreadPoolExecutor
 import xlrd
 import xlsxwriter
 from zipfile import ZipFile
-from netmiko import Netmiko
 
 from netoprmgr_dm.script.capture import function_capture
 from netoprmgr_dm.script.check import function_check
