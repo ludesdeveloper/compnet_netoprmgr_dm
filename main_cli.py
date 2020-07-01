@@ -7,7 +7,9 @@ import subprocess
 import threading
 from concurrent.futures import ThreadPoolExecutor
 import xlrd
+import xlsxwriter
 from zipfile import ZipFile
+from netmiko import Netmiko
 
 from netoprmgr_dm.script.capture import function_capture
 from netoprmgr_dm.script.check import function_check
@@ -26,10 +28,36 @@ result_path = os.path.join(result_path,'result/')
 class MainCli:
 
     def deviceIdentification():
+        list_devices = []
         chg_dir = os.chdir(data_path)
         current_dir=os.getcwd()
         raw_data_dir = (data_path+'/raw_data.xlsx')
-        call_device_identification = device_identification(raw_data_dir)
+        book = xlrd.open_workbook(raw_data_dir)
+        first_sheet = book.sheet_by_index(0)
+        cell = first_sheet.cell(0,0)
+        suported_device = ['cisco_ios','cisco_xr','cisco_asa','cisco_nxos','cisco_xe']
+        count_row = 0
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            futures = [executor.submit(device_identification, first_sheet, suported_device, i) for i in range(first_sheet.nrows)]
+            print(futures)
+            for future in futures:
+                try:
+                    #print (future.result())
+                    list_devices.append(future.result())
+                except TypeError as e:
+                    print (e)  
+
+        wb = xlsxwriter.Workbook('devices_data.xlsx')
+        ws = wb.add_worksheet('summary')
+        for enum, device in enumerate(list_devices):
+            ws.write(enum,0,device["hostname"])
+            ws.write(enum,1,device["ipaddress"])
+            ws.write(enum,2,device["username"])
+            ws.write(enum,3,device["password"])
+            ws.write(enum,4,device["secret"])
+            ws.write(enum,5,device["device_type"])
+        wb.close()
+        #call_device_identification = device_identification(raw_data_dir)
 
     def deviceAvailability():
         chg_dir = os.chdir(capture_path)
