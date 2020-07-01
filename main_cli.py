@@ -72,11 +72,13 @@ class MainCli:
             job.join()
         '''
         with ThreadPoolExecutor(max_workers=10) as executor:
-            jobs = []
-            for i in range(first_sheet.nrows):
-                a = executor.submit(function_capture, first_sheet, first_sheet_command, capture_path, i)
-                jobs.append(a)
-                print(a)
+            futures = [executor.submit(function_capture, first_sheet, first_sheet_command, capture_path, i) for i in range(first_sheet.nrows)]
+            print(futures)
+            for future in futures:
+                try:
+                    print (future.result())
+                except TypeError as e:
+                    print (e)   
         
         chg_dir = os.chdir(capture_path)
         current_dir=os.getcwd()
