@@ -78,6 +78,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 #ROUTE
 @app.route("/")
+@login_required               
 def home():
 	chg_dir = os.chdir(SCRIPT_DIR)
 	current_dir=os.getcwd()

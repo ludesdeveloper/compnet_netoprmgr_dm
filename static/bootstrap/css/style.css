@@ -1798,4 +1798,42 @@ h1, h2, h3, h4, h5,
 
 .hidebutton{
   display: none;
+  text-align: center;
+  margin:0 auto;
+  color: #fff;
+  background-color: #00918e;
+  border-color: #00918e;
 }
+
+.hidebutton:hover {
+  color: #fff;
+  background-color: #006b69;
+  border-color: #005e5c;
+}
+
+#login_form {
+  box-shadow: #005e5c 0px 0px 3px 0px;
+  color: white;
+}
+
+#login_form > div > form > small > a {
+  color: white;
+}
+
+#login_form > div > form > small > a:hover {
+  color: #00918e;
+}
+
+#submit {
+  color: #fff;
+  background-color: #00918e;
+  border-color: #00918e;
+  
+}
+#submit:hover {
+  color: #fff;
+  background-color: #006b69;
+  border-color: #005e5c;
+}
+.border-bottom {
+  border-bottom: 1px solid #005e5c!important;

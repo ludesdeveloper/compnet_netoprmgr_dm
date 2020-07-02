@@ -39,33 +39,7 @@
             <h1 class="mb-0 site-logo"><a href="{{ url_for('home') }}" class="text-white h2 mb-0"><img src="{{ url_for('static', filename='pic/netoprmgr_dm1.png') }}" width="170,41" height="50,22"></a></h1>
           </div>
           <div class="col-12 col-md-10 d-none d-xl-block">
-            <nav class="site-navigation position-relative text-right" role="navigation">
-              <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
-                <li class="active"><a href="{{ url_for('home') }}"><span>Home</span></a></li>
-                
-                <li class="has-children">
-                  <a href="#"><span>Initialize</span></a>
-                  <ul class="dropdown arrow-top">
-                    <li><a href="{{ url_for('template_generate_page') }}">Generate Template</a></li>
-                    <li><a href="{{ url_for('raw_data_upload_page') }}">Upload Raw Data</a></li>
-                    <li><a href="{{ url_for('raw_download') }}">Download Raw Data</a></li>
-                    <li><a href="{{ url_for('generate_device_data_page') }}">Generate Device Data(SSH)</a></li>
-                  </ul>
-                </li>
 
-                <li class="has-children">
-                  <a href="#"><span>Capture</span></a>
-                  <ul class="dropdown arrow-top">
-                    <li><a href="{{ url_for('device_data_upload_page') }}">Upload Data</a></li>
-                    <li><a href="{{ url_for('data_download') }}">Download Data</a></li>
-                    <li><a href="{{ url_for('capture_log_page') }}">Capture Device(SSH)</a></li>
-					<li><a href="{{ url_for('capture_log_download') }}">Download Logs</a></li>
-					<li><a href="{{ url_for('log_delete_page') }}">Delete Logs</a></li>
-                  </ul>
-                </li>
-                <li><a href="#developer"><span>Developer</span></a></li>
-              </ul>
-            </nav>
           </div>
           <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div>
         </div>
@@ -79,7 +53,7 @@
         <div class="row align-items-center justify-content-center text-center">
           <div class="col-md-10">
             <div class="row justify-content-center mb-4">
-              <div class="col-md-10 text-center">
+              <div class="col-md-4 text-center" id="login_form">
                 {% block content %}
                 
                 {% endblock %}
