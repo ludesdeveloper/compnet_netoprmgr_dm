@@ -84,29 +84,30 @@ class MainCli:
         book_command = xlrd.open_workbook(command_dir)
         first_sheet_command = book_command.sheet_by_index(0)
         cell_command = first_sheet_command.cell(0,0)
-        '''
-        jobs = []
+        
+        list_log = []
 
-        for i in range(first_sheet.nrows):
-            #call_function_capture=function_capture(first_sheet,first_sheet_command,capture_path)
-            my_thread = threading.Thread(target=function_capture, args=(first_sheet,first_sheet_command,capture_path,i))
-            jobs.append(my_thread)
-
-        for job in jobs:
-            job.start()
-
-        for job in jobs:
-            job.join()
-        '''
         with ThreadPoolExecutor(max_workers=10) as executor:
             futures = [executor.submit(function_capture, first_sheet, first_sheet_command, capture_path, i) for i in range(first_sheet.nrows)]
             print(futures)
             for future in futures:
                 try:
-                    print (future.result())
+                    #print (future.result())
+                    if future.result()['devicename'] == '':
+                        pass
+                    else:
+                        list_log.append(future.result())
                 except TypeError as e:
-                    print (e)   
+                    print (e)
         
+        #write logcapture.txt
+        print ('list_log')
+        print (list_log)
+        write = open('logcapture.txt', 'w')
+        for log in list_log:
+            write.write(log['devicename']+' | '+log['ip']+' | '+log['status']+'\n')
+        write.close()
+
         chg_dir = os.chdir(capture_path)
         current_dir=os.getcwd()
         files = os.listdir(current_dir)
