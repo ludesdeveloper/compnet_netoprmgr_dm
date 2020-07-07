@@ -122,6 +122,11 @@ def login():
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect('/')
+
 @app.route("/template_generate_page")
 @login_required
 def template_generate_page():
