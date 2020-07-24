@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="col-md-15 text-center">
+<h1 data-aos="fade-up">Support Software <span class="typed-words"></span></h1>
+<script src="{{ url_for('static', filename='bootstrap/js/typed.js') }}"></script>
+    <script>
+            var typed = new Typed('.typed-words', {
+            strings: ["Cisco IOS","Cisco XE","Cisco ASA", "Cisco XR", "Cisco WLC", "Cisco NXOS"],
+            typeSpeed: 80,
+            backSpeed: 80,
+            backDelay: 4000,
+            startDelay: 1000,
+            loop: true,
+            showCursor: true
+            });
+    </script>
+</div>
+<div class="testimonial">
+    <img src="{{ url_for('static', filename='pic/judul.png') }}" class="img-com" style="width:80%">
+    <p></p>
+</div>
+<div class="testimonial">
+    <img src="{{ url_for('static', filename='pic/cisco_ios.png') }}" class="img-com" style="width:16%">
+    <img src="{{ url_for('static', filename='pic/cisco_xe.png') }}" class="img-com" style="width:16%">
+    <img src="{{ url_for('static', filename='pic/cisco_asa.png') }}" class="img-com" style="width:16%">
+    <img src="{{ url_for('static', filename='pic/cisco_xr.png') }}" class="img-com" style="width:16%">
+    <img src="{{ url_for('static', filename='pic/cisco_wlc.png') }}" class="img-com" style="width:16%">
+    <img src="{{ url_for('static', filename='pic/cisco_nxos.png') }}" class="img-com" style="width:16%">
+</div>
+{% endblock %}

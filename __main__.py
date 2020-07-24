@@ -274,5 +274,26 @@ def log_delete():
 	MainCli.deleteCapture()
 	return redirect('/capture_log_page')
 
+@app.route('/support_device')
+@login_required
+def support_device():
+    return render_template('support_device.html')
+
+#http://localhost:5002/search?PID=WS-DEDAR
+@app.route('/search', methods=['GET'])
+def api_search():
+    query_parameters = request.args
+
+    PID = query_parameters.get('PID')
+    Script = query_parameters.get('Script')
+
+    chg_dir = os.chdir(DATA_DIR)
+    current_dir = os.getcwd()
+    support_dir = (DATA_DIR+'/support_devices.xlsx')
+    book = xlrd.open_workbook(support_dir)
+    first_sheet = book.sheet_by_index(0)
+    cell = first_sheet.cell(0, 0)
+    to_filter = []
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port='5001')

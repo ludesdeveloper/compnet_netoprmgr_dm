@@ -63,8 +63,15 @@
 					          <li><a href="{{ url_for('log_delete_page') }}">Delete Logs</a></li>
                   </ul>
                 </li>
-                <li><a href="#howto"><span>How to Use</span></a></li>
-                <li><a href="#developer"><span>Developer</span></a></li>
+                <li class="has-children">
+                  <a href="#"><span>Help</span></a>
+                  <ul class="dropdown arrow-top">
+                    <li><a href="#howto">How to Use</a></li>
+                    <li><a href="{{ url_for('command_guide') }}">Command Reference Guide</a></li>
+                    <li><a href="{{ url_for('support_device') }}">Support Device</a></li>
+                    <li><a href="#developer"><span>Developer</span></a></li>
+                  </ul>
+                </li>
                 <li><a href="{{ url_for('logout') }}"><span>Log Out</span></a></li>
               </ul>
             </nav>

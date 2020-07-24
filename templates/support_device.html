@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+            
+            
+<div class="row justify-content-center mb-4">
+    <div class="col-md-10 text-center">
+        <h1 data-aos="fade-up">Support Device <span class="typed-words"></span></h1>
+        <script src="{{ url_for('static', filename='bootstrap/js/typed.js') }}"></script>
+            <script>
+                    var typed = new Typed('.typed-words', {
+                    strings: ["Cisco Router","Cisco Switch","Cisco ASA", "Cisco Nexus", "Cisco WLC", "Cisco Access Point"],
+                    typeSpeed: 80,
+                    backSpeed: 80,
+                    backDelay: 4000,
+                    startDelay: 1000,
+                    loop: true,
+                    showCursor: true
+                    });
+            </script>
+      <p data-aos="fade-up" class=" w-75 mx-auto">Please input PID Number to Check Support Device</p>
+    </div>
+  </div>
+
+  <div class="form-search-wrap p-2" data-aos="fade-up" data-aos-delay="200">
+      <div class="row align-items-center">
+        <div class="col-lg-12 col-xl-5 no-sm-border border-right">
+          <input type="text" id="PID" class="form-control" placeholder="PID Number">
+        </div>
+        <div class="col-lg-12 col-xl-5 no-sm-border border-right">
+          <input type="text" id="Result" class="form-control" placeholder="Result" disabled>
+        </div>
+        <div class="col-lg-12 col-xl-2 ml-auto text-right">
+          <button onclick="loadContent()" class="btn text-white btn-primary">Search</button>
+        </div>
+      </div>
+  </div>
+
+  <script>
+    function loadContent(){
+        var nameValue = document.getElementById("PID").value;
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:5001/search?PID="+nameValue;
+        console.log(url)
+        xhr.onreadystatechange = function(){
+            if(this.readyState == 4 && this.status == 200){
+                //document.getElementById("hasil").innerHTML = this.responseText;
+                document.getElementById("Result").value = this.responseText;
+            }
+            else{
+              document.getElementById("Result").value = "cisco_none";
+            }
+        };
+        xhr.open("GET", url, true);
+        xhr.send();
+    }
+</script>
+
+</div>
+{% endblock %}
