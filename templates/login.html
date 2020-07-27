@@ -4,9 +4,11 @@
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">LOG IN</legend>
+                <p></p>
+                <img src="{{ url_for('static', filename='pic/netoprmgr_dm.png') }}" width="170,41" height="50,22">
+                <p></p>
                 <div class="form-group">
-                    {{ form.username.label(class="form-control-label") }}
+                    {{ form.username.label(class="login_form-label") }}
                     {% if form.username.errors %}
                         {{ form.username(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -19,7 +21,7 @@
                     {% endif %}
                 </div>
                 <div class="form-group">
-                    {{ form.password.label(class="form-control-label") }}
+                    {{ form.password.label(class="login_form-label") }}
                     {% if form.password.errors %}
                         {{ form.password(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
