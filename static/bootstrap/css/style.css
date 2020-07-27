@@ -148,7 +148,7 @@ h1, h2, h3, h4, h5,
   background: #fff; }
   @media (min-width: 768px) {
     .site-footer {
-      padding: 8em 0; } }
+      padding: 0; } }
   .site-footer .border-top {
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important; }
   .site-footer p {
@@ -1812,12 +1812,13 @@ h1, h2, h3, h4, h5,
 }
 
 #login_form {
-  box-shadow: #005e5c 0px 0px 3px 0px;
-  color: white;
+  box-shadow: #005e5c 0px 0px 10px 0px;
+  color: #005e5c;
+  background-color: #fff;
 }
 
 #login_form > div > form > small > a {
-  color: white;
+  color: #005e5c;
 }
 
 #login_form > div > form > small > a:hover {
@@ -1836,5 +1837,5 @@ h1, h2, h3, h4, h5,
   border-color: #005e5c;
 }
 .border-bottom {
-  border-bottom: 1px solid #005e5c!important;
+  border-bottom: 0px solid #005e5c!important;
 }
