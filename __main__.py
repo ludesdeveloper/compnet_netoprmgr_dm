@@ -6,6 +6,10 @@ from datetime import datetime
 import pkg_resources
 import json
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
+import xlrd
+import xlsxwriter
+from zipfile import ZipFile
 from werkzeug.utils import secure_filename
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
@@ -177,12 +181,80 @@ def raw_download():
 def generate_device_data_page():
 	return render_template('generate_device_data_page.html')
 
-@app.route('/generate_device_data')
+@app.route('/generate_device_data/', methods=['GET', 'POST'])
 @login_required
 def generate_device_data():
-	from main_cli import MainCli
-	MainCli.deviceIdentification()
-	return redirect('/capture_log_page')
+	query_parameters = request.args
+	total_workers = query_parameters.get('multithread')
+	total_workers = int(total_workers)
+	def generate_device_data_detail():
+		from netoprmgr_dm.script.device_identification import device_identification
+		list_devices = []
+		chg_dir = os.chdir(DATA_DIR)
+		current_dir=os.getcwd()
+		raw_data_dir = (DATA_DIR+'/raw_data.xlsx')
+		book = xlrd.open_workbook(raw_data_dir)
+		first_sheet = book.sheet_by_index(0)
+		cell = first_sheet.cell(0,0)
+		suported_device = ['cisco_ios','cisco_xr','cisco_asa','cisco_nxos','cisco_xe']
+		count_row = 0
+		with ThreadPoolExecutor(max_workers=total_workers) as executor:
+			futures = [executor.submit(device_identification, first_sheet, suported_device, i) for i in range(first_sheet.nrows)]
+			print(futures)
+			#show process
+			proc_running = 0
+			proc_pending = 0
+			proc_finished = 0
+			for process in futures:
+						if 'running' in str(process):
+							proc_running += 1
+						elif 'pending' in str(process):
+							proc_pending += 1
+						elif 'finished' in str(process):
+							proc_finished += 1
+			yield f"data:Multithread workers set to {str(total_workers)}\n\n"
+			yield f"data:Running = {proc_running}, Pending = {proc_pending}, Done = {proc_finished}\n\n"
+			yield f"data:It'll take a while, Plase wait\n\n"
+			yield f"data:\n\n"
+			#neutralize value
+			proc_running = 0
+			proc_pending = 0
+			proc_finished = 0
+			for enum, future in enumerate(futures, start=1):
+				try:
+					#print (future.result())
+					list_devices.append(future.result())
+					#show process
+					for process in futures:
+						if 'running' in str(process):
+							proc_running += 1
+						elif 'pending' in str(process):
+							proc_pending += 1
+						elif 'finished' in str(process):
+							proc_finished += 1
+					yield f"data:Device Data Generated: {str(enum)} of {len(futures)}\n\n"
+					yield f"data:{future.result()['hostname']}\n\n"
+					yield f"data:Running = {proc_running}, Pending = {proc_pending}, Done = {proc_finished}\n\n"
+					yield f"data:\n\n"
+				except TypeError as e:
+					print (e)
+				#neutralize value
+				proc_running = 0
+				proc_pending = 0
+				proc_finished = 0
+
+		wb = xlsxwriter.Workbook('devices_data.xlsx')
+		ws = wb.add_worksheet('summary')
+		for enum, device in enumerate(list_devices):
+			ws.write(enum,0,device["hostname"])
+			ws.write(enum,1,device["ipaddress"])
+			ws.write(enum,2,device["username"])
+			ws.write(enum,3,device["password"])
+			ws.write(enum,4,device["secret"])
+			ws.write(enum,5,device["device_type"])
+		wb.close()
+		yield f"data:Finished\n\n"
+	return Response(generate_device_data_detail(), mimetype='text/event-stream')
 
 @app.route("/device_data/upload")
 @login_required
@@ -245,12 +317,100 @@ def log_upload():
 def capture_log_page():
     return render_template('capture_log_page.html')
 
-@app.route('/capture_log')
+@app.route('/capture_log/', methods=['GET', 'POST'])
 @login_required
 def capture_log():
-	from main_cli import MainCli
-	MainCli.captureDevice()
-	return redirect('/capture_log/download')
+	query_parameters = request.args
+	total_workers = query_parameters.get('multithread')
+	total_workers = int(total_workers)
+	def capture_log_detail():
+		from netoprmgr_dm.script.capture import function_capture
+		chg_dir = os.chdir(CAPT_DIR)
+		current_dir=os.getcwd()
+		files = os.listdir(current_dir)
+		for file in files:
+			if file.endswith(".zip"):
+				os.remove(file)
+		data_dir = (DATA_DIR+'/devices_data.xlsx')
+		command_dir = (DATA_DIR+'/show_command.xlsx')
+		#start multi thread
+		book = xlrd.open_workbook(data_dir)
+		first_sheet = book.sheet_by_index(0)
+		cell = first_sheet.cell(0,0)
+
+		book_command = xlrd.open_workbook(command_dir)
+		first_sheet_command = book_command.sheet_by_index(0)
+		cell_command = first_sheet_command.cell(0,0)
+		
+		list_log = []
+		with ThreadPoolExecutor(max_workers=total_workers) as executor:
+			futures = [executor.submit(function_capture, first_sheet, first_sheet_command, CAPT_DIR, i) for i in range(first_sheet.nrows)]
+			print(futures)
+			#show process
+			proc_running = 0
+			proc_pending = 0
+			proc_finished = 0
+			for process in futures:
+						if 'running' in str(process):
+							proc_running += 1
+						elif 'pending' in str(process):
+							proc_pending += 1
+						elif 'finished' in str(process):
+							proc_finished += 1
+			yield f"data:Multithread workers set to {str(total_workers)}\n\n"
+			yield f"data:Running = {proc_running}, Pending = {proc_pending}, Done = {proc_finished}\n\n"
+			yield f"data:It'll take a while, Plase wait\n\n"
+			yield f"data:\n\n"
+			#neutralize value
+			proc_running = 0
+			proc_pending = 0
+			proc_finished = 0
+			for enum, future in enumerate(futures, start=1):
+				try:
+					#print (future.result())
+					if future.result()['devicename'] == '':
+						pass
+					else:
+						list_log.append(future.result())
+						#show process
+						for process in futures:
+							if 'running' in str(process):
+								proc_running += 1
+							elif 'pending' in str(process):
+								proc_pending += 1
+							elif 'finished' in str(process):
+								proc_finished += 1
+						yield f"data:Device Captured : {str(enum)} of {len(futures)}\n\n"
+						yield f"data:{future.result()['devicename']}\n\n"
+						yield f"data:Running = {proc_running}, Pending = {proc_pending}, Done = {proc_finished}\n\n"
+						yield f"data:\n\n"
+				except TypeError as e:
+					print (e)
+				#neutralize value
+				proc_running = 0
+				proc_pending = 0
+				proc_finished = 0
+		
+		#write logcapture.txt
+		print ('list_log')
+		print (list_log)
+		write = open('logcapture.txt', 'w')
+		for log in list_log:
+			write.write(log['devicename']+' | '+log['ip']+' | '+log['status']+'\n')
+		write.close()
+
+		chg_dir = os.chdir(CAPT_DIR)
+		current_dir=os.getcwd()
+		files = os.listdir(current_dir)
+		zipObj = ZipFile('captures.zip', 'w')
+		for file in files:
+			if '__init__.py' in file:
+				pass
+			else:
+				zipObj.write(file)
+		zipObj.close()
+		yield f"data:Finished\n\n"
+	return Response(capture_log_detail(), mimetype='text/event-stream')
 
 @app.route('/command_guide')
 @login_required
