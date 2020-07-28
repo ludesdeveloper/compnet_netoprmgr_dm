@@ -181,7 +181,7 @@ def raw_download():
 def generate_device_data_page():
 	return render_template('generate_device_data_page.html')
 
-@app.route('/generate_device_data')
+@app.route('/generate_device_data', methods=['GET', 'POST'])
 @login_required
 def generate_device_data():
 	def generate_device_data_detail():
