@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1 data-aos="fade-up">Click to <span class="typed-words"></span></h1>
-    <form action="{{ url_for('capture_log') }}">
-        <!--input type="submit" value="Submit"-->
-        <button type="submit" class="btn btn-primary" value="Submit">Capture Log</button>
-    </form>
+
+    <div class="card-body scroll" id="kotak">
+        <p class="card-text" id="result"></p>
+    </div>
+
+    <div class="ludes-margin-bottom">
+        <p class="btn btn-primary" id="generatebutton" onclick="triggerSSE()">Capture Log</p>
+        <p class="btn btn-primary hidebutton" id="regeneratebutton" onclick="triggerSSE()">Recapture</p>
+        <a class="btn btn-primary hidebutton" id="downloadbutton" href="{{ url_for('static', filename='capture/captures.zip') }}" download>Download Captures/Logs</a>
+    </div>
 
     <script src="{{ url_for('static', filename='bootstrap/js/typed.js') }}"></script>
     <script>
@@ -17,5 +23,45 @@
             loop: true,
             showCursor: true
             });
+    </script>
+
+    <script>
+        function triggerSSE() {
+        if(typeof(EventSource) !== "undefined") {
+        var hidebtn = document.getElementById("downloadbutton");
+        var hidebtn1 = document.getElementById("generatebutton");
+        var hidebtn2 = document.getElementById("regeneratebutton");
+        var source = new EventSource("/capture_log");
+        var str_find = "Finished";
+        hidebtn.style.display = "none";
+        hidebtn1.style.display = "none";
+        hidebtn2.style.display = "none";
+        document.getElementById("result").innerHTML = '';
+        source.onmessage = function(event) {
+            //var txt = even.data;
+            document.getElementById("result").innerHTML += event.data + "<br>";
+            updateScroll();
+            //alert(even.data);
+            //var obj = JSON.parse(txt);
+            //document.getElementById("result").innerHTML += obj.total_print + "<br>";
+            //console.log(obj.total_print);
+            event_check = event.data.includes("Finished");
+            if(event_check==true){
+            source.close()
+            hidebtn.style.display = "inline";
+            hidebtn1.style.display = "none";
+            hidebtn2.style.display = "inline";
+            //alert('ketemu')
+            };
+        };
+        } else {
+            document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
+        }
+        }
+
+        function updateScroll(){
+            var element = document.getElementById("kotak");
+            element.scrollTop = element.scrollHeight;
+        }
     </script>
 {% endblock %}
