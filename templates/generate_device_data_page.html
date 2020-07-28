@@ -7,7 +7,7 @@
     </div>
 
     <div class="ludes-margin-bottom">
-        <label id="mltlbl" style="color:white;">MultiThread Worker</label>
+        <label id="mltlbl" style="color:white;">MultiThread Worker (Default=10)</label>
         <input type="text" name="multithread" id="multithread">
     </div>
 
@@ -34,7 +34,9 @@
     <script>
         function triggerSSE() {
         var MultiThread = document.getElementById('multithread').value;
-        console.log(MultiThread);
+        if(MultiThread == ""){
+            MultiThread = 10;
+        };
         if(typeof(EventSource) !== "undefined") {
         var hidebtn = document.getElementById("downloadbutton");
         var hidebtnxlsx = document.getElementById("downloadxlsx");

@@ -198,9 +198,6 @@ def generate_device_data():
 		cell = first_sheet.cell(0,0)
 		suported_device = ['cisco_ios','cisco_xr','cisco_asa','cisco_nxos','cisco_xe']
 		count_row = 0
-		#total_workers = 10
-		#query_parameters = request.args
-		#total_workers = query_parameters.get('multithread')
 		with ThreadPoolExecutor(max_workers=total_workers) as executor:
 			futures = [executor.submit(device_identification, first_sheet, suported_device, i) for i in range(first_sheet.nrows)]
 			print(futures)
@@ -320,9 +317,12 @@ def log_upload():
 def capture_log_page():
     return render_template('capture_log_page.html')
 
-@app.route('/capture_log')
+@app.route('/capture_log/', methods=['GET', 'POST'])
 @login_required
 def capture_log():
+	query_parameters = request.args
+	total_workers = query_parameters.get('multithread')
+	total_workers = int(total_workers)
 	def capture_log_detail():
 		from netoprmgr_dm.script.capture import function_capture
 		chg_dir = os.chdir(CAPT_DIR)
@@ -343,7 +343,6 @@ def capture_log():
 		cell_command = first_sheet_command.cell(0,0)
 		
 		list_log = []
-		total_workers = 10
 		with ThreadPoolExecutor(max_workers=total_workers) as executor:
 			futures = [executor.submit(function_capture, first_sheet, first_sheet_command, CAPT_DIR, i) for i in range(first_sheet.nrows)]
 			print(futures)

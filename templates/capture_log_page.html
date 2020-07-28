@@ -7,6 +7,11 @@
     </div>
 
     <div class="ludes-margin-bottom">
+        <label id="mltlbl" style="color:white;">MultiThread Worker (Default=10)</label>
+        <input type="text" name="multithread" id="multithread">
+    </div>
+
+    <div class="ludes-margin-bottom">
         <p class="btn btn-primary" id="generatebutton" onclick="triggerSSE()">Capture Log</p>
         <p class="btn btn-primary hidebutton" id="regeneratebutton" onclick="triggerSSE()">Recapture</p>
         <a class="btn btn-primary hidebutton" id="downloadbutton" href="{{ url_for('static', filename='capture/captures.zip') }}" download>Download Captures/Logs</a>
@@ -27,15 +32,24 @@
 
     <script>
         function triggerSSE() {
+        var MultiThread = document.getElementById('multithread').value;
+        if(MultiThread == ""){
+            MultiThread = 10;
+        };
+        console.log(MultiThread);
         if(typeof(EventSource) !== "undefined") {
         var hidebtn = document.getElementById("downloadbutton");
+        var hidemltthrd = document.getElementById('multithread');
+        var hidemltlbl = document.getElementById('mltlbl');
         var hidebtn1 = document.getElementById("generatebutton");
         var hidebtn2 = document.getElementById("regeneratebutton");
-        var source = new EventSource("/capture_log");
+        var source = new EventSource("/capture_log/?multithread="+MultiThread);
         var str_find = "Finished";
         hidebtn.style.display = "none";
         hidebtn1.style.display = "none";
         hidebtn2.style.display = "none";
+        hidemltthrd.style.display = "none";
+        hidemltlbl.style.display = "none";
         document.getElementById("result").innerHTML = '';
         source.onmessage = function(event) {
             //var txt = even.data;
@@ -51,6 +65,8 @@
             hidebtn.style.display = "inline";
             hidebtn1.style.display = "none";
             hidebtn2.style.display = "inline";
+            hidemltthrd.style.display = "inline";
+            hidemltlbl.style.display = "inline";
             //alert('ketemu')
             };
         };
