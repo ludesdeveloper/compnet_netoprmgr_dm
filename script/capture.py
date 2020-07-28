@@ -77,7 +77,7 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
             #except NameError:
                 #raise
         else:
-            response = os.system("ping -c 1 " + my_device["host"])
+            response = os.system("ping -n 1 " + my_device["host"])
             if response == 0:
                 try:
                     net_connect = Netmiko(**my_device)
