@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1 data-aos="fade-up">Click to <span class="typed-words"></span></h1>
-    <form action="{{ url_for('generate_device_data') }}">
-        <!--input type="submit" value="Submit"-->
-        <button type="submit" class="btn btn-primary" value="Submit">Generate Device Data</button>
-    </form>
+
+    <div class="card-body scroll" id="kotak">
+        <p class="card-text" id="result"></p>
+    </div>
+
+    <div class="ludes-margin-bottom">
+        <p class="btn btn-primary" id="generatebutton" onclick="triggerSSE()">Generate Device Data</p>
+        <p class="btn btn-primary hidebutton" id="regeneratebutton" onclick="triggerSSE()">Regenerate</p>
+        <a class="btn btn-primary hidebutton" id="downloadbutton" href="{{ url_for('static', filename='data/devices_data.xlsx') }}" download>Download Device Data</a>
+        <a class="btn btn-primary hidebutton" id="downloadxlsx" href="{{ url_for('capture_log_page') }}">Go To Capture Device</a>
+    </div>
 
     <script src="{{ url_for('static', filename='bootstrap/js/typed.js') }}"></script>
     <script>
@@ -17,5 +24,48 @@
             loop: true,
             showCursor: true
             });
+    </script>
+
+    <script>
+        function triggerSSE() {
+        if(typeof(EventSource) !== "undefined") {
+        var hidebtn = document.getElementById("downloadbutton");
+        var hidebtnxlsx = document.getElementById("downloadxlsx");
+        var hidebtn1 = document.getElementById("generatebutton");
+        var hidebtn2 = document.getElementById("regeneratebutton");
+        var source = new EventSource("/generate_device_data");
+        var str_find = "Finished";
+        hidebtn.style.display = "none";
+        hidebtnxlsx.style.display = "none";
+        hidebtn1.style.display = "none";
+        hidebtn2.style.display = "none";
+        document.getElementById("result").innerHTML = '';
+        source.onmessage = function(event) {
+            //var txt = even.data;
+            document.getElementById("result").innerHTML += event.data + "<br>";
+            updateScroll();
+            //alert(even.data);
+            //var obj = JSON.parse(txt);
+            //document.getElementById("result").innerHTML += obj.total_print + "<br>";
+            //console.log(obj.total_print);
+            event_check = event.data.includes("Finished");
+            if(event_check==true){
+            source.close()
+            hidebtn.style.display = "inline";
+            hidebtnxlsx.style.display = "inline";
+            hidebtn1.style.display = "none";
+            hidebtn2.style.display = "inline";
+            //alert('ketemu')
+            };
+        };
+        } else {
+            document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
+        }
+        }
+
+        function updateScroll(){
+            var element = document.getElementById("kotak");
+            element.scrollTop = element.scrollHeight;
+        }
     </script>
 {% endblock %}
