@@ -181,9 +181,12 @@ def raw_download():
 def generate_device_data_page():
 	return render_template('generate_device_data_page.html')
 
-@app.route('/generate_device_data', methods=['GET', 'POST'])
+@app.route('/generate_device_data/', methods=['GET', 'POST'])
 @login_required
 def generate_device_data():
+	query_parameters = request.args
+	total_workers = query_parameters.get('multithread')
+	total_workers = int(total_workers)
 	def generate_device_data_detail():
 		from netoprmgr_dm.script.device_identification import device_identification
 		list_devices = []
@@ -195,7 +198,9 @@ def generate_device_data():
 		cell = first_sheet.cell(0,0)
 		suported_device = ['cisco_ios','cisco_xr','cisco_asa','cisco_nxos','cisco_xe']
 		count_row = 0
-		total_workers = 10
+		#total_workers = 10
+		#query_parameters = request.args
+		#total_workers = query_parameters.get('multithread')
 		with ThreadPoolExecutor(max_workers=total_workers) as executor:
 			futures = [executor.submit(device_identification, first_sheet, suported_device, i) for i in range(first_sheet.nrows)]
 			print(futures)
