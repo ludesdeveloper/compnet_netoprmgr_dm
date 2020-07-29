@@ -414,7 +414,6 @@ def capture_log():
 	end_time = time.time()
 	total_time = end_time - start_time
 	print(total_time)
-	yield f"data:Total Time = {total_time} Seconds\n\n"
 	return Response(capture_log_detail(), mimetype='text/event-stream')
 
 @app.route('/command_guide')
