@@ -77,49 +77,49 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
             #except NameError:
                 #raise
         else:
-            response = os.system("ping -n 1 " + my_device["host"])
-            if response == 0:
-                try:
-                    net_connect = Netmiko(**my_device)
-                    #writing log
-                    write=open(capture_path+'/'+first_sheet.row_values(i)[0]+'-'+first_sheet.row_values(i)[1]+'.txt','w')
-                    #key information about device
-                    write.write(first_sheet.row_values(i)[5]+'\n')
+            #response = os.system("ping -c 1 " + my_device["host"])
+            #if response == 0:
+            try:
+                net_connect = Netmiko(**my_device)
+                #writing log
+                write=open(capture_path+'/'+first_sheet.row_values(i)[0]+'-'+first_sheet.row_values(i)[1]+'.txt','w')
+                #key information about device
+                write.write(first_sheet.row_values(i)[5]+'\n')
 
-                    #value logcapture
-                    devicename = first_sheet.row_values(i)[0]
-                    ip = first_sheet.row_values(i)[1]
-                    status = 'Executed'
-
-                    #show command
-
-                    for command in range(first_sheet_command.nrows):
-                        if my_device["device_type"] in first_sheet_command.row_values(command)[0]:
-                            count_column = 1
-                            #while count_column < 8:
-                            for cmd in (first_sheet_command.row_values(command,start_colx=0,end_colx=None)):
-                                try:
-                                    output = net_connect.send_command(first_sheet_command.row_values(command)[count_column])
-                                    print(first_sheet_command.row_values(command)[count_column])
-                                    print(output)
-                                    write.write(first_sheet_command.row_values(command)[count_column]+'\n')
-                                    write.write(output+'\n')
-                                except:
-                                    pass
-                                count_column+=1
-                    #disconnect netmiko
-                    net_connect.disconnect()
-                
-                except:
-                    devicename = first_sheet.row_values(i)[0]
-                    ip = first_sheet.row_values(i)[1]
-                    status = 'Wrong Username Password'
-                #except NameError:
-                    #raise
-            else:
+                #value logcapture
                 devicename = first_sheet.row_values(i)[0]
                 ip = first_sheet.row_values(i)[1]
-                status = 'Cannot Ping Device'
+                status = 'Executed'
+
+                #show command
+
+                for command in range(first_sheet_command.nrows):
+                    if my_device["device_type"] in first_sheet_command.row_values(command)[0]:
+                        count_column = 1
+                        #while count_column < 8:
+                        for cmd in (first_sheet_command.row_values(command,start_colx=0,end_colx=None)):
+                            try:
+                                output = net_connect.send_command(first_sheet_command.row_values(command)[count_column])
+                                print(first_sheet_command.row_values(command)[count_column])
+                                print(output)
+                                write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                                write.write(output+'\n')
+                            except:
+                                pass
+                            count_column+=1
+                #disconnect netmiko
+                net_connect.disconnect()
+            
+            except:
+                devicename = first_sheet.row_values(i)[0]
+                ip = first_sheet.row_values(i)[1]
+                status = 'Wrong Username Password'
+            #except NameError:
+                #raise
+            #else:
+                #devicename = first_sheet.row_values(i)[0]
+                #ip = first_sheet.row_values(i)[1]
+                #status = 'Cannot Ping Device'
 
     #return value log           
     log_device = {

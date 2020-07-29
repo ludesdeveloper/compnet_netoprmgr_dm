@@ -188,6 +188,7 @@ def generate_device_data():
 	total_workers = query_parameters.get('multithread')
 	total_workers = int(total_workers)
 	def generate_device_data_detail():
+		start_time = time.time()
 		from netoprmgr_dm.script.device_identification import device_identification
 		list_devices = []
 		chg_dir = os.chdir(DATA_DIR)
@@ -253,6 +254,11 @@ def generate_device_data():
 			ws.write(enum,4,device["secret"])
 			ws.write(enum,5,device["device_type"])
 		wb.close()
+		#adding total time
+		end_time = time.time()
+		total_time = end_time - start_time
+		print(total_time)
+		yield f"data:Total Time : {str(total_time)} Seconds\n\n"
 		yield f"data:Finished\n\n"
 	return Response(generate_device_data_detail(), mimetype='text/event-stream')
 
@@ -320,11 +326,11 @@ def capture_log_page():
 @app.route('/capture_log/', methods=['GET', 'POST'])
 @login_required
 def capture_log():
-	start_time = time.time()
 	query_parameters = request.args
 	total_workers = query_parameters.get('multithread')
 	total_workers = int(total_workers)
 	def capture_log_detail():
+		start_time = time.time()
 		from netoprmgr_dm.script.capture import function_capture
 		chg_dir = os.chdir(CAPT_DIR)
 		current_dir=os.getcwd()
@@ -391,7 +397,7 @@ def capture_log():
 				proc_running = 0
 				proc_pending = 0
 				proc_finished = 0
-		
+
 		#write logcapture.txt
 		print ('list_log')
 		print (list_log)
@@ -410,10 +416,12 @@ def capture_log():
 			else:
 				zipObj.write(file)
 		zipObj.close()
+		#adding total time
+		end_time = time.time()
+		total_time = end_time - start_time
+		print(total_time)
+		yield f"data:Total Time : {str(total_time)} Seconds\n\n"
 		yield f"data:Finished\n\n"
-	end_time = time.time()
-	total_time = end_time - start_time
-	print(total_time)
 	return Response(capture_log_detail(), mimetype='text/event-stream')
 
 @app.route('/command_guide')
