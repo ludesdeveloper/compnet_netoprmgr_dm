@@ -320,6 +320,7 @@ def capture_log_page():
 @app.route('/capture_log/', methods=['GET', 'POST'])
 @login_required
 def capture_log():
+	start_time = time.time()
 	query_parameters = request.args
 	total_workers = query_parameters.get('multithread')
 	total_workers = int(total_workers)
@@ -410,6 +411,10 @@ def capture_log():
 				zipObj.write(file)
 		zipObj.close()
 		yield f"data:Finished\n\n"
+	end_time = time.time()
+	total_time = end_time - start_time
+	print(total_time)
+	yield f"data:Total Time = {total_time} Seconds\n\n"
 	return Response(capture_log_detail(), mimetype='text/event-stream')
 
 @app.route('/command_guide')
