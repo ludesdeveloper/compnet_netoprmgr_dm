@@ -278,7 +278,7 @@ def device_data_upload():
 			#file.save(os.path.join(app.config['UPLOAD_FOLDER_DATA'], filename))
 			file.save(os.path.join(app.config['UPLOAD_FOLDER_DATA'], 'devices_data.xlsx'))
 			flash('File successfully uploaded')
-			return redirect('/device_data/result')
+			return redirect('/capture_log_page')
 		else:
 			flash('Allowed file type is xlsx')
 			return redirect(request.url)
