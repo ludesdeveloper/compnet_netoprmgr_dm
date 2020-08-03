@@ -10,8 +10,18 @@
                 {{ message }}
             </div>
         {% endif %}
+        {% if message == 'Clear Counter On' %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
+        {% if message == 'Clear Log On' %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
     {% endfor %}
-    {% endif %}
+{% endif %}
 {% endwith %}
 
 <h1 data-aos="fade-up">Automation <span class="typed-words"></span></h1>

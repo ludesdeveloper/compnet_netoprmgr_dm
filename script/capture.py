@@ -107,6 +107,16 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
                             except:
                                 pass
                             count_column+=1
+                #clear counter clear log
+                output = net_connect.send_command("clear counters", expect_string="\[confirm\]")
+                print(output)
+                output = net_connect.send_command("\n", expect_string="#")
+                print(output)
+                output = net_connect.send_command("clear log", expect_string="\[confirm\]")
+                print(output)
+                output = net_connect.send_command("\n", expect_string="#")
+                print(output)
+
                 #disconnect netmiko
                 net_connect.disconnect()
             

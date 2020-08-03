@@ -85,12 +85,14 @@ class LoginForm(FlaskForm):
 @login_required               
 def home():
 	chg_dir = os.chdir(SCRIPT_DIR)
-	current_dir=os.getcwd()
-	read_file = open('file_identification.py','r')
+	#checking word inside file
+	read_file = open('capture.py','r')
 	read_file_list = read_file.readlines()
 	for line in read_file_list:
-		if '#' not in line and 'except NameError' in line:
-			flash('Debug File Identification Still On')
+		if 'output = net_connect.send_command("clear counters"' in line:
+			flash('Clear Counter On')
+		if 'output = net_connect.send_command("clear log"' in line:
+			flash('Clear Log On')
 	return render_template('home.html')
 
 @app.route("/about")
