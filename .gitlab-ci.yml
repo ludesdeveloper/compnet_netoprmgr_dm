@@ -1,28 +1,37 @@
-# This file is a template, and might need editing before it works on your project.
-docker-build-master:
-  # Official docker image.
-  image: docker:latest
-  stage: build
-  services:
-    - docker:dind
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-  script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-    - docker push "$CI_REGISTRY_IMAGE"
-  only:
-    - master
+stages:
+  - docker build
+  - docker test
+
+variables:
+  CONTAINER_TEST_IMAGE: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
 
 docker-build:
-  # Official docker image.
-  image: docker:latest
-  stage: build
+  image: docker:stable
+  stage: docker build
   services:
     - docker:dind
+  environment:
+    name: production
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
-    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
-  except:
-    - master
+    - docker build --pull -t $CONTAINER_TEST_IMAGE .
+    - docker push $CONTAINER_TEST_IMAGE
+  only:
+    - schedules
+
+docker-run-test:
+  image: docker:stable
+  stage: docker test
+  services:
+    - docker:dind
+  environment:
+    name: production
+  before_script:
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker run -d -p 5001:5001 $CONTAINER_TEST_IMAGE
+    - docker ps -a
+  only:
+    - schedules
