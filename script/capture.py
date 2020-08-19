@@ -99,23 +99,24 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
                         #while count_column < 8:
                         for cmd in (first_sheet_command.row_values(command,start_colx=0,end_colx=None)):
                             try:
-                                output = net_connect.send_command(first_sheet_command.row_values(command)[count_column])
-                                print(first_sheet_command.row_values(command)[count_column])
-                                print(output)
-                                write.write(first_sheet_command.row_values(command)[count_column]+'\n')
-                                write.write(output+'\n')
+                                if 'clear' in first_sheet_command.row_values(command)[count_column]:
+                                    output = net_connect.send_command(first_sheet_command.row_values(command)[count_column], expect_string="\[confirm\]")
+                                    print(first_sheet_command.row_values(command)[count_column])
+                                    print(output)
+                                    write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                                    write.write(output+'\n')
+                                    output = net_connect.send_command("\n", expect_string="#")
+                                    print(output)
+
+                                else:
+                                    output = net_connect.send_command(first_sheet_command.row_values(command)[count_column])
+                                    print(first_sheet_command.row_values(command)[count_column])
+                                    print(output)
+                                    write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                                    write.write(output+'\n')
                             except:
                                 pass
                             count_column+=1
-                #clear counter clear log
-                output = net_connect.send_command("clear counters", expect_string="\[confirm\]")
-                print(output)
-                output = net_connect.send_command("\n", expect_string="#")
-                print(output)
-                output = net_connect.send_command("clear log", expect_string="\[confirm\]")
-                print(output)
-                output = net_connect.send_command("\n", expect_string="#")
-                print(output)
 
                 #disconnect netmiko
                 net_connect.disconnect()
