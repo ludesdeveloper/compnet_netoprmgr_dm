@@ -71,6 +71,12 @@ def device_identification(first_sheet, suported_device, i):
                     check_device_type = 'cisco_wlc'                          
                     #ws.write(count_row,5,'cisco_wlc')
                 
+                elif 'Active-image:' in output:
+                    check_device_type = 'cisco_ios'
+
+                elif 'Cisco Sx220 Series Switch Software' in output:
+                    check_device_type = 'cisco_ios'
+
                 else:
                     check_device_type = 'unidentified'  
                     #ws.write(count_row,5,'unidentified')
