@@ -31,7 +31,9 @@ docker-run-test:
     - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
     - docker pull $CONTAINER_TEST_IMAGE
-    - docker run -d -p 5001:5001 $CONTAINER_TEST_IMAGE
+    - docker run -d -p 5022:5001 --name dm $CONTAINER_TEST_IMAGE
     - docker ps -a
+    - docker stop dm
+    - docker rm dm
   only:
     - schedules
