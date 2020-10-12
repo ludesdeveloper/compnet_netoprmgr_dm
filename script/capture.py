@@ -81,6 +81,10 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
             #if response == 0:
             try:
                 net_connect = Netmiko(**my_device)
+                try:
+                    net_connect.enable()
+                except:
+                    pass
                 #writing log
                 write=open(capture_path+'/'+first_sheet.row_values(i)[0]+'-'+first_sheet.row_values(i)[1]+'.txt','w')
                 #key information about device
