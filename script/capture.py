@@ -78,7 +78,7 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
             #except NameError:
                 #raise
         elif my_device["device_type"] == 'cucm':
-            functionCUCM = CUCM(capture_path)
+            functionCUCM = CUCM(first_sheet,first_sheet_command,capture_path,i)
         else:
             #response = os.system("ping -c 1 " + my_device["host"])
             #if response == 0:
