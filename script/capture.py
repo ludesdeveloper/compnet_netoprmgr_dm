@@ -1,6 +1,7 @@
 import os
 import re
 
+from netoprmgr_dm.device_templates.cisco.cucm import CUCM
 from netmiko import Netmiko
 from steelscript.steelhead.core import steelhead
 from steelscript.common.service import UserAuth
@@ -76,6 +77,8 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
             #tolong dibenerin
             #except NameError:
                 #raise
+        elif my_device["device_type"] == 'cucm':
+            functionCUCM = CUCM(capture_path)
         else:
             #response = os.system("ping -c 1 " + my_device["host"])
             #if response == 0:
