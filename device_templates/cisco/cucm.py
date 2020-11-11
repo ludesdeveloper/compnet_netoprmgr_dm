@@ -15,14 +15,14 @@ def CUCM(first_sheet,first_sheet_command,capture_path,i):
     # myusername = my_device['username']
     # mypassword = my_device['password']
 
-    myhost = ('172.22.200.211')
-    myusername = ('admin')
-    mypassword = ('iTM@#2012')
+    host=('172.22.200.211')
+    user=('admin')
+    pwd=('iTM@#2012')
 
     #SSH to client
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=myhost, username=myhost, password=myhost)
+    ssh.connect(hostname=host, username=user, password=pwd)
     interact = SSHClientInteraction(ssh, timeout=60, display=True)
     interact.expect('admin:')
     interact.send('set cli pagination off')
@@ -40,11 +40,17 @@ def CUCM(first_sheet,first_sheet_command,capture_path,i):
             count_column = 1
             #while count_column < 8:
             for cmd in (first_sheet_command.row_values(command,start_colx=0,end_colx=None)):
-                interact.send(first_sheet_command.row_values(command)[count_column])
-                interact.expect('admin:')
-                output = interact.current_output_clean
-                write.write(first_sheet_command.row_values(command)[count_column]+'\n')
-                write.write(output)
+                try:
+                    if (first_sheet_command.row_values(command)[count_column]) == '' :
+                        break
+                    else:
+                        interact.send(first_sheet_command.row_values(command)[count_column])
+                        interact.expect('admin:')
+                        output = interact.current_output_clean
+                        write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                        write.write(output)
+                except:
+                    pass
 
                 count_column+=1
 
