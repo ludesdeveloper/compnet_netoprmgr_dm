@@ -62,7 +62,7 @@ def perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType
     write=open(capture_path+'/'+first_sheet.row_values(i)[0]+'-'+first_sheet.row_values(i)[1]+'.txt','w')
     write.write(UCMType+'\n')
     for command in range(first_sheet_command.nrows):
-        if my_device["device_type"] in first_sheet_command.row_values(command)[0]:
+        if 'ucm' in first_sheet_command.row_values(command)[0]:
             count_column = 1
             #while count_column < 8:
             for cmd in (first_sheet_command.row_values(command,start_colx=0,end_colx=None)):
