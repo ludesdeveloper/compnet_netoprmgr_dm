@@ -15,9 +15,9 @@ def CUCM(first_sheet,first_sheet_command,capture_path,i):
     # myusername = my_device['username']
     # mypassword = my_device['password']
 
-    host=('172.22.200.211')
-    user=('admin')
-    pwd=('iTM@#2012')
+    host=my_device["host"]
+    user=my_device["username"]
+    pwd=my_device["password"]
 
     #SSH to client
     ssh = paramiko.SSHClient()
