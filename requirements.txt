@@ -28,6 +28,7 @@ msgpack==0.6.2
 netmiko==3.1.0
 packaging==20.3
 paramiko==2.7.1
+paramiko-expect==0.2.8
 pep517==0.8.2
 progress==1.5
 pycparser==2.20
