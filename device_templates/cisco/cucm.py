@@ -43,6 +43,18 @@ def CUCM(first_sheet,first_sheet_command,capture_path,i):
                 try:
                     if (first_sheet_command.row_values(command)[count_column]) == '' :
                         break
+                    elif 'show network cluster' in (first_sheet_command.row_values(command)[count_column]):
+                        interact.send(first_sheet_command.row_values(command)[count_column])
+                        interact.expect('admin:')
+                        output = interact.current_output_clean
+                        if 'Server Table (processnode) Entries' in output:
+                            write.write('This is Publisher\n')
+                            write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                            write.write(output)
+                        else:
+                            write.write('This is Subscriber\n')
+                            write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                            write.write(output)
                     else:
                         interact.send(first_sheet_command.row_values(command)[count_column])
                         interact.expect('admin:')
