@@ -7,6 +7,7 @@ from steelscript.steelhead.core import steelhead
 from steelscript.common.service import UserAuth
 import xlrd
 
+#for i in range(first_sheet.nrows), first_sheet is all device data available
 def function_capture(first_sheet,first_sheet_command,capture_path,i):
 
     #value logcapture
@@ -77,7 +78,7 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
             #tolong dibenerin
             #except NameError:
                 #raise
-        elif my_device["device_type"] == 'cucm':
+        elif 'ucm_' in my_device["device_type"]:
             try:
                 functionCUCM = CUCM(first_sheet,first_sheet_command,capture_path,i)
                 devicename = first_sheet.row_values(i)[0]

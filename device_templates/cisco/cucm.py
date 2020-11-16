@@ -2,6 +2,7 @@ import paramiko
 import re
 from paramiko_expect import SSHClientInteraction
 
+#for i in range(first_sheet.nrows), first_sheet is all device data available
 def CUCM(first_sheet,first_sheet_command,capture_path,i):
     #Set Connection and Credentials
     my_device = {
@@ -14,11 +15,37 @@ def CUCM(first_sheet,first_sheet_command,capture_path,i):
     # myhost = my_device['host']
     # myusername = my_device['username']
     # mypassword = my_device['password']
-
+    if my_device["device_type"] == 'ucm_cucm_pub':
+        UCMType = 'ucm_cucm_pub'
+        function_perTypeCUCM = perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType)
+    elif my_device["device_type"] == 'ucm_cucm_sub':
+        UCMType = 'ucm_cucm_sub'
+        function_perTypeCUCM = perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType)
+    elif my_device["device_type"] == 'ucm_cuc_pub':
+        UCMType = 'ucm_cuc_pub'
+        function_perTypeCUCM = perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType)
+    elif my_device["device_type"] == 'ucm_cuc_sub':
+        UCMType = 'ucm_cuc_sub'
+        function_perTypeCUCM = perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType)
+    elif my_device["device_type"] == 'ucm_imp_pub':
+        UCMType = 'ucm_imp_pub'
+        function_perTypeCUCM = perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType)
+    elif my_device["device_type"] == 'ucm_imp_sub':
+        UCMType = 'ucm_imp_sub'
+        function_perTypeCUCM = perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType)
+    elif my_device["device_type"] == 'ucm_ccx_pub':
+        UCMType = 'ucm_ccx_pub'
+        function_perTypeCUCM = perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType)
+    elif my_device["device_type"] == 'ucm_ccx_sub':
+        UCMType = 'ucm_ccx_sub'
+        function_perTypeCUCM = perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType)
+    else:
+        UCMType = 'Wrong Input, Please Check device_type'
+        function_perTypeCUCM = perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType)
+def perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType):
     host=my_device["host"]
     user=my_device["username"]
     pwd=my_device["password"]
-
     #SSH to client
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -27,14 +54,13 @@ def CUCM(first_sheet,first_sheet_command,capture_path,i):
     interact.expect('admin:')
     interact.send('set cli pagination off')
     interact.expect('admin:')
-
+    
     #Command capture
     # cucm_commands = ['show network cluster', 'show hardware', 'show network eth0', 'show version active', 'show status', 'show network ipprefs all', 'utils ntp status', 
     # 'show process load cpu', 'show process load memory', 'utils disaster_recovery history backup', 'utils dbreplication runtimestate', 'show risdb query phone', 
     # 'file tail activelog /cm/log/amc/AlertLog/AlertLog_11_03_2020_09_36.csv 30']
     write=open(capture_path+'/'+first_sheet.row_values(i)[0]+'-'+first_sheet.row_values(i)[1]+'.txt','w')
-
-
+    write.write(UCMType+'\n')
     for command in range(first_sheet_command.nrows):
         if my_device["device_type"] in first_sheet_command.row_values(command)[0]:
             count_column = 1
@@ -43,18 +69,6 @@ def CUCM(first_sheet,first_sheet_command,capture_path,i):
                 try:
                     if (first_sheet_command.row_values(command)[count_column]) == '' :
                         break
-                    elif 'show network cluster' in (first_sheet_command.row_values(command)[count_column]):
-                        interact.send(first_sheet_command.row_values(command)[count_column])
-                        interact.expect('admin:')
-                        output = interact.current_output_clean
-                        if 'Server Table (processnode) Entries' in output:
-                            write.write('This is Publisher\n')
-                            write.write(first_sheet_command.row_values(command)[count_column]+'\n')
-                            write.write(output)
-                        else:
-                            write.write('This is Subscriber\n')
-                            write.write(first_sheet_command.row_values(command)[count_column]+'\n')
-                            write.write(output)
                     else:
                         interact.send(first_sheet_command.row_values(command)[count_column])
                         interact.expect('admin:')
