@@ -69,6 +69,41 @@ def perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType
                 try:
                     if (first_sheet_command.row_values(command)[count_column]) == '' :
                         break
+                    elif (first_sheet_command.row_values(command)[count_column]) == 'show cert list own':
+                        #Command to list certificate
+                        write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                        interact.send(first_sheet_command.row_values(command)[count_column])
+                        interact.expect('admin:')
+                        output = interact.current_output_clean
+                        output = output.splitlines()
+                        #Print certificate
+                        for i in output:
+                            if i == '':
+                                pass
+                            else:
+                                cert_regex = re.findall('(.*):', i)
+                                cert_regex = cert_regex[0]
+                                interact.send('show cert own ' + cert_regex)
+                                interact.expect('admin:')
+                                output = interact.current_output_clean
+                                # validity_from_regex = re.findall('From:\s+(.*)', output)
+                                # validity_from_regex = validity_from_regex[0]
+                                # validity_to_regex = re.findall('To:\s+(.*)', output)
+                                # validity_to_regex = validity_to_regex[0]
+                                write.write(cert_regex + '\n')
+                                write.write(output)
+                    elif (first_sheet_command.row_values(command)[count_column]) == 'file list activelog /cm/log/amc/AlertLog reverse date':
+                        #Alert Log
+                        write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                        interact.send(first_sheet_command.row_values(command)[count_column])
+                        interact.expect('admin:')
+                        output = interact.current_output_clean
+                        alert_log = (output.split()[0])
+                        interact.send(f'file tail activelog /cm/log/amc/AlertLog/{alert_log} 30')
+                        interact.expect('admin:')
+                        output = interact.current_output_clean
+                        write.write(f'file tail activelog /cm/log/amc/AlertLog/{alert_log} 30')
+                        write.write(output)
                     else:
                         interact.send(first_sheet_command.row_values(command)[count_column])
                         interact.expect('admin:')
@@ -77,40 +112,6 @@ def perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType
                         write.write(output)
                 except:
                     pass
-
                 count_column+=1
-
-    #Command to list certificate
-    interact.send('show cert list own')
-    interact.expect('admin:')
-    output = interact.current_output_clean
-    output = output.splitlines()
-
-    #Print certificate
-    for i in output:
-        if i == '':
-            pass
-        else:
-            cert_regex = re.findall('(.*):', i)
-            cert_regex = cert_regex[0]
-            interact.send('show cert own ' + cert_regex)
-            interact.expect('admin:')
-            output = interact.current_output_clean
-            # validity_from_regex = re.findall('From:\s+(.*)', output)
-            # validity_from_regex = validity_from_regex[0]
-            # validity_to_regex = re.findall('To:\s+(.*)', output)
-            # validity_to_regex = validity_to_regex[0]
-            write.write(cert_regex + '\n')
-            write.write(output)
-    #Alert Log
-    interact.send('file list activelog /cm/log/amc/AlertLog reverse date')
-    interact.expect('admin:')
-    output = interact.current_output_clean
-    alert_log = (output.split()[0])
-    interact.send(f'file tail activelog /cm/log/amc/AlertLog/{alert_log} 30')
-    interact.expect('admin:')
-    output = interact.current_output_clean
-    write.write(f'file tail activelog /cm/log/amc/AlertLog/{alert_log} 30')
-    write.write(output)
     #close ssh
     ssh.close()
