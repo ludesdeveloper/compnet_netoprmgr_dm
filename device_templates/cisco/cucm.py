@@ -102,5 +102,15 @@ def perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType
             # validity_to_regex = validity_to_regex[0]
             write.write(cert_regex + '\n')
             write.write(output)
-    
+    #Alert Log
+    interact.send('file list activelog /cm/log/amc/AlertLog reverse date')
+    interact.expect('admin:')
+    output = interact.current_output_clean
+    alert_log = (output.split()[0])
+    interact.send(f'file tail activelog /cm/log/amc/AlertLog/{alert_log} 30')
+    interact.expect('admin:')
+    output = interact.current_output_clean
+    write.write(f'file tail activelog /cm/log/amc/AlertLog/{alert_log} 30')
+    write.write(output)
+    #close ssh
     ssh.close()
