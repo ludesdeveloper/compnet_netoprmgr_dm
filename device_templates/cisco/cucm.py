@@ -75,6 +75,7 @@ def perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType
                         interact.send(first_sheet_command.row_values(command)[count_column])
                         interact.expect('admin:')
                         output = interact.current_output_clean
+                        write.write(output)
                         output = output.splitlines()
                         #Print certificate
                         for i in output:
@@ -102,7 +103,7 @@ def perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType
                         interact.send(f'file tail activelog /cm/log/amc/AlertLog/{alert_log} 30')
                         interact.expect('admin:')
                         output = interact.current_output_clean
-                        write.write(f'file tail activelog /cm/log/amc/AlertLog/{alert_log} 30')
+                        write.write(f'file tail activelog /cm/log/amc/AlertLog/{alert_log} 30\n')
                         write.write(output)
                     else:
                         interact.send(first_sheet_command.row_values(command)[count_column])
