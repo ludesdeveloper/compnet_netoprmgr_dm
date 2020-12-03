@@ -1,17 +1,21 @@
+# Define stages
 stages:
   - docker build
-  - docker test
+  - docker run test
+  - application test on ubuntu
 
+# Set variable for container test image
 variables:
   CONTAINER_TEST_IMAGE: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
 
+# Build docker container and push to GitLab Container Registry
 docker-build:
   image: docker:stable
   stage: docker build
   services:
     - docker:dind
   environment:
-    name: production
+    name: staging
   before_script:
     - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
@@ -20,19 +24,69 @@ docker-build:
   only:
     - schedules
 
+# Test running docker container
 docker-run-test:
   image: docker:stable
-  stage: docker test
+  stage: docker run test
+  needs: [docker-build]
   services:
     - docker:dind
   environment:
-    name: production
+    name: staging
   before_script:
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    - apk update && apk add curl curl-dev bash
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker run -d -p 5051:5001 --name dm $CONTAINER_TEST_IMAGE
+    - docker ps -a
+    - sleep 15
+    - export OUTPUT=$(docker exec dm curl -sSfL localhost:5001 | grep "netoprmgr_dm")
+    - echo $OUTPUT
+    - if [[ "$(echo "$OUTPUT")" == '' ]] && echo "Not netoprmgr_dm"; then exit 1; fi
+  after_script:
+    - docker stop dm
+    - docker rm dm
+  only:
+    - schedules
+
+# Test running docker container on ubuntu
+application-test-on-ubuntu:
+  image: ubuntu:latest
+  stage: application test on ubuntu
+  needs: [docker-build]
+  services:
+    - docker:dind
+  environment:
+    name: staging
+  before_script:
+    - apt-get update
+    - apt-get install -y --no-install-recommends apt-utils
+    - apt-get install -y dialog apt-utils 
+    - sleep 3
+    - apt-get install apt-transport-https
+    - apt-get install -y ca-certificates
+    - apt-get install -y curl
+    - apt-get install -y gnupg-agent
+    - apt-get install -y software-properties-common
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+    - apt-key fingerprint 0EBFCD88
+    - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    - sleep 3
+    - apt-get update
+    - apt-get install -y --no-install-recommends apt-utils
+    - apt-get install -y dialog apt-utils
+    - apt-get install -y docker-ce docker-ce-cli containerd.io
     - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
     - docker pull $CONTAINER_TEST_IMAGE
-    - docker run -d -p 5022:5001 --name dm $CONTAINER_TEST_IMAGE
+    - docker run -d -p 5051:5001 --name dm $CONTAINER_TEST_IMAGE
     - docker ps -a
+    - sleep 15
+    - export OUTPUT=$(docker exec dm curl -sSfL localhost:5001 | grep "netoprmgr_dm")
+    - echo $OUTPUT
+    - if [[ "$(echo "$OUTPUT")" == '' ]] && echo "Not netoprmgr_dm"; then exit 1; fi
+  after_script:
     - docker stop dm
     - docker rm dm
   only:
