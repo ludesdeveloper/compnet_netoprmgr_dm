@@ -3,12 +3,14 @@ stages:
   - docker build
   - docker run test
   - application test on ubuntu
+  - release image
 
-# Set variable for container test image
+# Set variable for container images
 variables:
   CONTAINER_TEST_IMAGE: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
 
-# Build docker container and push to GitLab Container Registry
+# Build docker container and push to GitLab Container Registry as master
 docker-build:
   image: docker:stable
   stage: docker build
@@ -89,5 +91,23 @@ application-test-on-ubuntu:
   after_script:
     - docker stop dm
     - docker rm dm
+  only:
+    - schedules
+
+# Release image to GitLab Container Registry as latest
+release-image:
+  image: docker:stable
+  stage: release image
+  needs: [docker-run-test,application-test-on-ubuntu]
+  services:
+    - docker:dind
+  environment:
+    name: production
+  before_script:
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
   only:
     - schedules
