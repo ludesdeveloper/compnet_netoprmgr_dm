@@ -9,18 +9,22 @@ import xlrd
 
 #for i in range(first_sheet.nrows), first_sheet is all device data available
 def function_capture(first_sheet,first_sheet_command,capture_path,i):
-
     #value logcapture
     devicename = ''
     ip = ''
     status = ''
-
+    #device type condition
+    conditional_device_type = ''
+    if first_sheet.row_values(i)[5] == 'cisco_ap':
+        conditional_device_type = 'cisco_ios'
+    else:
+        conditional_device_type = first_sheet.row_values(i)[5]
     my_device = {
         "host": first_sheet.row_values(i)[1],
         "username": first_sheet.row_values(i)[2],
         "password": first_sheet.row_values(i)[3],
         "secret" : first_sheet.row_values(i)[4],
-        "device_type": first_sheet.row_values(i)[5],
+        "device_type": conditional_device_type,
     }
 
     #exclude device_type '-'
@@ -57,7 +61,7 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
                 #show command
 
                 for command in range(first_sheet_command.nrows):
-                    if my_device["device_type"] in first_sheet_command.row_values(command)[0]:
+                    if my_device["device_type"] == first_sheet_command.row_values(command)[0]:
                         count_column = 1
                         #while count_column < 8:
                         for cmd in (first_sheet_command.row_values(command,start_colx=0,end_colx=None)):
@@ -111,7 +115,7 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
                 #show command
 
                 for command in range(first_sheet_command.nrows):
-                    if my_device["device_type"] in first_sheet_command.row_values(command)[0]:
+                    if first_sheet.row_values(i)[5] == first_sheet_command.row_values(command)[0]:
                         count_column = 1
                         #while count_column < 8:
                         for cmd in (first_sheet_command.row_values(command,start_colx=0,end_colx=None)):

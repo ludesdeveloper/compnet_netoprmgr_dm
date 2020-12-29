@@ -31,6 +31,10 @@ def device_identification(first_sheet, suported_device, i):
                 }
 
                 net_connect = Netmiko(**my_device)
+                try:
+                    net_connect.enable()
+                except:
+                    pass
                 '''
                 output = net_connect.send_command('show ver')
                 if 'Incorrect' in output:
@@ -42,6 +46,7 @@ def device_identification(first_sheet, suported_device, i):
                     output = net_connect.send_command('show sysinfo')
                 else:
                     print('show ver')
+                    term = net_connect.send_command('term length 0')
                     output = net_connect.send_command('show ver')
                 print(output)
 
@@ -77,6 +82,9 @@ def device_identification(first_sheet, suported_device, i):
                 elif 'Cisco Sx220 Series Switch Software' in output:
                     check_device_type = 'cisco_ios'
 
+                elif 'Cisco AP Software' in output:
+                    check_device_type = 'cisco_ap'
+                
                 else:
                     check_device_type = 'unidentified'  
                     #ws.write(count_row,5,'unidentified')
