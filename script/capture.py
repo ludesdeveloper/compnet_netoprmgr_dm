@@ -118,7 +118,7 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
                     if first_sheet.row_values(i)[5] == first_sheet_command.row_values(command)[0]:
                         count_column = 1
                         #while count_column < 8:
-                        for cmd in (first_sheet_command.row_values(command,start_colx=0,end_colx=None)):
+                        for enum, cmd in enumerate(first_sheet_command.row_values(command,start_colx=0,end_colx=None)):
                             try:
                                 if 'clear' in first_sheet_command.row_values(command)[count_column]:
                                     output = net_connect.send_command(first_sheet_command.row_values(command)[count_column], expect_string="\[confirm\]")
@@ -128,7 +128,8 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
                                     write.write(output+'\n')
                                     output = net_connect.send_command("\n", expect_string="#")
                                     print(output)
-
+                                elif first_sheet_command.row_values(command)[count_column] == '':
+                                    break
                                 else:
                                     output = net_connect.send_command(first_sheet_command.row_values(command)[count_column])
                                     print(first_sheet_command.row_values(command)[count_column])
