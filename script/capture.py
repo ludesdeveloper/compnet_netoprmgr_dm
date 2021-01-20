@@ -1,5 +1,6 @@
 import os
 import re
+from datetime import datetime
 
 from netoprmgr_dm.device_templates.cisco.cucm import CUCM
 from netmiko import Netmiko
@@ -131,11 +132,26 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
                                 elif first_sheet_command.row_values(command)[count_column] == '':
                                     break
                                 else:
-                                    output = net_connect.send_command(first_sheet_command.row_values(command)[count_column])
-                                    print(first_sheet_command.row_values(command)[count_column])
-                                    print(output)
-                                    write.write(first_sheet_command.row_values(command)[count_column]+'\n')
-                                    write.write(output+'\n')
+                                    #adding sign
+                                    if enum == 10:
+                                        sign_day = (datetime.now().day)
+                                        sign_month = (datetime.now().month)
+                                        sign_year = (datetime.now().year)
+                                        sign_year = re.findall('..(..)', str(sign_year))
+                                        sign_year = sign_year[0]
+                                        sign_ludes = str(f'show{sign_day}clock{sign_year}show{sign_month}time\n')
+                                        write.write(sign_ludes)
+                                        output = net_connect.send_command(first_sheet_command.row_values(command)[count_column])
+                                        print(first_sheet_command.row_values(command)[count_column])
+                                        print(output)
+                                        write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                                        write.write(output+'\n')
+                                    else:
+                                        output = net_connect.send_command(first_sheet_command.row_values(command)[count_column])
+                                        print(first_sheet_command.row_values(command)[count_column])
+                                        print(output)
+                                        write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                                        write.write(output+'\n')
                             except:
                                 pass
                             count_column+=1
