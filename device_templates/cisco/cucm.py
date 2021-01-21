@@ -1,5 +1,6 @@
 import paramiko
 import re
+from datetime import datetime
 from paramiko_expect import SSHClientInteraction
 
 #for i in range(first_sheet.nrows), first_sheet is all device data available
@@ -65,7 +66,7 @@ def perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType
         if 'ucm' in first_sheet_command.row_values(command)[0]:
             count_column = 1
             #while count_column < 8:
-            for cmd in (first_sheet_command.row_values(command,start_colx=0,end_colx=None)):
+            for enum, cmd in enumerate(first_sheet_command.row_values(command,start_colx=0,end_colx=None)):
                 try:
                     if (first_sheet_command.row_values(command)[count_column]) == '' :
                         break
@@ -106,11 +107,26 @@ def perTypeCUCM(first_sheet,first_sheet_command,capture_path,my_device,i,UCMType
                         write.write(f'file tail activelog /cm/log/amc/AlertLog/{alert_log} 30\n')
                         write.write(output)
                     else:
-                        interact.send(first_sheet_command.row_values(command)[count_column])
-                        interact.expect('admin:')
-                        output = interact.current_output_clean
-                        write.write(first_sheet_command.row_values(command)[count_column]+'\n')
-                        write.write(output)
+                        #adding sign
+                        if enum == 6:
+                            sign_day = (datetime.now().day)
+                            sign_month = (datetime.now().month)
+                            sign_year = (datetime.now().year)
+                            sign_year = re.findall('..(..)', str(sign_year))
+                            sign_year = sign_year[0]
+                            sign_ludes = str(f'show{sign_day}clock{sign_year}show{sign_month}time\n')
+                            write.write(sign_ludes)
+                            interact.send(first_sheet_command.row_values(command)[count_column])
+                            interact.expect('admin:')
+                            output = interact.current_output_clean
+                            write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                            write.write(output)
+                        else:
+                            interact.send(first_sheet_command.row_values(command)[count_column])
+                            interact.expect('admin:')
+                            output = interact.current_output_clean
+                            write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                            write.write(output)
                 except:
                     pass
                 count_column+=1
