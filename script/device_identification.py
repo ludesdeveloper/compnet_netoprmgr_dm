@@ -22,7 +22,7 @@ def device_identification(first_sheet, suported_device, i):
 
             try:
                 try:
-                    custom_port = int(first_sheet.row_values(i)[6])
+                    custom_port = int(first_sheet.row_values(i)[5])
                 except:
                     custom_port = 22
                 my_device = {
