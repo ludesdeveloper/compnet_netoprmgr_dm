@@ -20,12 +20,17 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
         conditional_device_type = 'cisco_ios'
     else:
         conditional_device_type = first_sheet.row_values(i)[5]
+    try:
+        custom_port = int(first_sheet.row_values(i)[6])
+    except:
+        custom_port = 22
     my_device = {
         "host": first_sheet.row_values(i)[1],
         "username": first_sheet.row_values(i)[2],
         "password": first_sheet.row_values(i)[3],
         "secret" : first_sheet.row_values(i)[4],
         "device_type": conditional_device_type,
+        "port" : custom_port,
     }
 
     #exclude device_type '-'
