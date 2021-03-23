@@ -13,6 +13,7 @@ def device_identification(first_sheet, suported_device, i):
                     "password": "password",
                     "secret" : "secret",
                     "device_type": "device_type",
+                    "port" : "port",
                 }
     else:
         print('Executing Device :')
@@ -20,13 +21,17 @@ def device_identification(first_sheet, suported_device, i):
         for j in suported_device:
 
             try:
-
+                try:
+                    custom_port = int(first_sheet.row_values(i)[6])
+                except:
+                    custom_port = 22
                 my_device = {
                     "host": first_sheet.row_values(i)[1],
                     "username": first_sheet.row_values(i)[2],
                     "password": first_sheet.row_values(i)[3],
                     "secret" : first_sheet.row_values(i)[4],
                     "device_type": j,
+                    "port": custom_port,
                     "timeout" : 10,
                 }
 
@@ -95,6 +100,7 @@ def device_identification(first_sheet, suported_device, i):
                     "password": my_device["password"],
                     "secret" : my_device["secret"],
                     "device_type": check_device_type,
+                    "port" : custom_port,
                 }
                 break
             
@@ -108,6 +114,7 @@ def device_identification(first_sheet, suported_device, i):
                     "password": first_sheet.row_values(i)[3],
                     "secret" : first_sheet.row_values(i)[4],
                     "device_type": j,
+                    "port": 22,
                 }
                 
                 add_device = {
@@ -117,6 +124,7 @@ def device_identification(first_sheet, suported_device, i):
                     "password": my_device["password"],
                     "secret" : my_device["secret"],
                     "device_type": '-',
+                    "port": 22,
                 }
                 
     return add_device
