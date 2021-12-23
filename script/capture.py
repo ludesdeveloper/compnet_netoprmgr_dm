@@ -32,7 +32,7 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
         "device_type": conditional_device_type,
         "port" : custom_port,
     }
-
+    
     #exclude device_type '-'
     if my_device["device_type"] == '-':
         print('Device Not Executed :')
@@ -134,6 +134,14 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
                                     write.write(output+'\n')
                                     output = net_connect.send_command("\n", expect_string="#")
                                     print(output)
+                                elif 'display diagnostic-information' in first_sheet_command.row_values(command)[count_column]:
+                                    output = net_connect.send_command(first_sheet_command.row_values(command)[count_column], expect_string="diagnostic")
+                                    print(first_sheet_command.row_values(command)[count_column])
+                                    print(output)
+                                    write.write(first_sheet_command.row_values(command)[count_column]+'\n')
+                                    output = net_connect.send_command(command_string="N", expect_string="Finished displaying operating information for all features and modules",delay_factor=4)
+                                    print(output)
+                                    write.write(output+'\n')
                                 elif first_sheet_command.row_values(command)[count_column] == '':
                                     break
                                 else:
@@ -155,6 +163,7 @@ def function_capture(first_sheet,first_sheet_command,capture_path,i):
                                         output = net_connect.send_command(first_sheet_command.row_values(command)[count_column])
                                         print(first_sheet_command.row_values(command)[count_column])
                                         print(output)
+                                        
                                         write.write(first_sheet_command.row_values(command)[count_column]+'\n')
                                         write.write(output+'\n')
                             except:
