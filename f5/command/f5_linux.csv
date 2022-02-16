@@ -1,0 +1,17 @@
+tmsh list sys global-settings hostname
+tmsh show sys version
+uptime
+tmsh show sys hardware
+tmsh show sys performance system historical
+tmsh show sys performance throughput historical
+tmsh show sys performance connections historical
+tmsh -q -c "cd /;show ltm virtual recursive" | grep -iE "(ltm::virtual|availability|state)"
+tmsh -q -c "cd /;show ltm pool recursive" | grep -iE "(ltm::pool|availability|state)"
+tmsh -q -c "cd /;show ltm node recursive" | grep -iE "(ltm::node|availability|state)"
+tmsh show cm device
+tmsh show cm sync-status
+tmsh show cm traffic-group
+tmsh -q -c "cd /; list sys file ssl-cert recursive"
+tmsh show sys license
+tmsh show sys provision
+cat /var/log/ltm

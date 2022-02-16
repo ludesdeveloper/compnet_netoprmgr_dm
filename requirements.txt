@@ -37,7 +37,7 @@ MarkupSafe==1.1.1
 matplotlib==3.2.2
 msgpack==0.6.2
 netaddr==0.8.0
-netmiko==3.1.0
+netmiko==3.4.0
 netoprmgr==1.0
 ntc-templates==1.4.0
 numpy==1.19.0
